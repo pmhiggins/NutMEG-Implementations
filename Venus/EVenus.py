@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 def setup_sulfatereduction(R, k_RTP=1):
     """ Set up a sulate reduction reaction to pass to the sulfate reducer
-    as its metabolism"""
+    as its metabolism. Use the reactor R."""
 
     # set up reagents. No need for composition as that is saved in the reactor.
     H2aq = reaction.reagent('H2(aq)', R.env, phase='aq')
@@ -62,8 +62,12 @@ H2ppmlst=np.linspace(0.01, 200, num=101)
 for ppm in H2ppmlst:
     ### 25C
     V.env.T = 273+25
+
     # find conc at this ppm and update
     V.update_conditions(ppm, 1e-10)
+
+    # this method updates the quotient, std gibbs, and molar gibbs in
+    # the current environment.
     SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
     # extract the parameters we're interested in from the organism
@@ -75,6 +79,7 @@ for ppm in H2ppmlst:
 
     ### 75C
     V.env.T = 273+75
+    # repeat updates for new temperature
     V.update_conditions(ppm, 1e-10)
     SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
