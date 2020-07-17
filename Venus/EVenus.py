@@ -405,13 +405,13 @@ def plot_concentrations(ppmlst, concs_with_T, target_ppm, temps, reagent_name):
 def plot_energies(ppmlst, gibbs_with_T, target_ppm, temps, reaction_name, reagent_name):
 
     fig, ax = plt.subplots(figsize=(7,5), dpi=150)
-    ax.plot(ppmlst, gibbs_with_T[0], c='#2c7bb6', label=str(temps[0])+' K', linewidth=2)
-    ax.plot(ppmlst, gibbs_with_T[1], c='#fdae61', label=str(temps[1])+' K', linewidth=2)
-    ax.plot(ppmlst, gibbs_with_T[2], c='#d7191c', label=str(temps[2])+' K', linewidth=2)
+    ax.plot(ppmlst, gibbs_with_T[0], c='#5e3c99', label=str(temps[0])+' K', linewidth=4)
+    ax.plot(ppmlst, gibbs_with_T[1], c='#fdb863', label=str(temps[1])+' K', linewidth=4)
+    ax.plot(ppmlst, gibbs_with_T[2], c='#e66101', label=str(temps[2])+' K', linewidth=4)
 
-    ax.axvline(target_ppm[0], ls='--', c='k', lw=2)
-    ax.axvline(target_ppm[1], c='k', lw=2)
-    ax.axvline(target_ppm[2], ls='--', c='k', lw=2)
+    ax.axvline(target_ppm[0], ls='--', c='k', lw=3)
+    ax.axvline(target_ppm[1], c='k', lw=3)
+    ax.axvline(target_ppm[2], ls='--', c='k', lw=3)
 
     plt.xlabel("Atmospheric concentration of "+reagent_name+" [ppm]", fontsize=14)
     plt.ylabel("Free energy [J/mol]", fontsize=14)
@@ -428,13 +428,13 @@ CO2targets=(750000, 940000,1000000)
 CH4targets=(0.1, 5, 10)
 
 ##############   Methanogenesis vary CO2   ##############
-#"""
+"""
 # CO2 conc range, and corresponding gibbs range. Keeps H2 at 25 ppm and CH4 at 5 ppm
 CO2ppmlst, CO2concs, CO2gibbs = Venus_atm_energy('Methanogen', setup_methanogenesis, 'CO2(aq)', temps=(278, 314, 350))
 
 plot_concentrations(CO2ppmlst, CO2concs, CO2targets, (278, 314, 350), r'$\mathregular{CO}_2$')
 plot_energies(CO2ppmlst, CO2gibbs, CO2targets, (278, 314, 350), 'methanogenesis', r'$\mathregular{CO}_2$')
-#"""
+"""
 
 ##############   Methanogenesis vary H2   ##############
 """
@@ -487,16 +487,16 @@ def overall_plot():
 
 
 
-    ax.plot(Tlst, MmidG, c='#d7191c', label='Methanogenesis', lw=2)
-    ax.fill_between(Tlst, MminG, MmaxG, color='#d7191c', alpha=0.5)
+    ax.plot(Tlst, MmidG, c='#5e3c99', label='Methanogenesis', lw=2)
+    ax.fill_between(Tlst, MminG, MmaxG, color='#5e3c99', alpha=0.5)
 
-    ax.plot(Tlst, SmidG, c='#fdae61', label='Sulfate Reduction', lw=2)
-    ax.fill_between(Tlst, SminG, SmaxG, color='#fdae61', alpha=0.5)
+    ax.plot(Tlst, SmidG, c='#fdb863', label='Sulfate Reduction', lw=2)
+    ax.fill_between(Tlst, SminG, SmaxG, color='#fdb863', alpha=0.5)
 
-    ax.plot(Tlst, HmidG, c='#2c7bb6', label=r'$\mathregular{H}_2$ oxidation', lw=2)
-    ax.fill_between(Tlst, HminG, HmaxG, color='#2c7bb6', alpha=0.5)
+    ax.plot(Tlst, HmidG, c='#e66101', label=r'$\mathregular{H}_2$ oxidation', lw=2)
+    ax.fill_between(Tlst, HminG, HmaxG, color='#e66101', alpha=0.5)
 
-    ax.plot(Tlst, HminminG, c='tab:olive', label=r'$\mathregular{H}_2$ oxidation ($\mathregular{O}_2$ 3ppm)', lw=2)
+    ax.plot(Tlst, HminminG, c='#e66101', label=r'$\mathregular{H}_2$ oxidation ($\mathregular{O}_2$ 3ppm)', lw=2, ls='--')
 
     ax.axhline(0, c='k', lw=0.5)
 
