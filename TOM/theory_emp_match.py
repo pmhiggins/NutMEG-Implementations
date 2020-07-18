@@ -1,10 +1,16 @@
-dataimport methanogen_extractor as extractor
+import methanogen_extractor as extractor
 import sys,os, statistics
 sys.path.append(os.path.dirname(__file__)+'/../../NutMEG/')
 import NutMEG as es
 import NutMEG.util.NutMEGparams as nmp
 
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+# change matplotlib rcparams updating plot fonts etc.
+mpl.rcParams['font.family'] = 'sans-serif'
+mpl.rcParams['font.sans-serif'] = 'cmr10'
+mpl.rcParams['axes.linewidth'] = 2
+mpl.rcParams['mathtext.fontset'] = 'cm'
 
 def tovol(vol, lsts):
     """Convert lists passed into unit volume"""
@@ -71,13 +77,13 @@ def plot_powers(ax, key, ilabel, files=('data/EmpiricalMethanogens/CH483.csv',),
         ax.plot(Tr, L2, c='c', label='Lever 2pc maintenance')
 
     if unitBM:
-        ax.set_ylabel(ilabel+' Power per L biomass')
+        ax.set_ylabel(ilabel+' Power per L biomass', fontsize=11)
         ax.set_ylim(1e-2,1e8)
     else:
-        ax.set_ylabel(ilabel+' W/cell')
+        ax.set_ylabel(ilabel+' W/cell', fontsize=11)
         ax.set_ylim(1e-19,1e-8)
 
-    ax.set_xlabel('Temperature [K]')
+    ax.set_xlabel('Temperature [K]', fontsize=11)
     ax.set_xlim(273,373)
     if log:
         ax.set_yscale('log')
@@ -173,14 +179,14 @@ def MaintenanceRange_nATPs(Trange=[275,295,315,335,355,375], Perform=True, fract
 
 
 
-es.db_helper.create_major_tables(replace=False, dbpath='allMtestc')
+# es.db_helper.create_major_tables(replace=False, dbpath='allMtestc')
 
 # extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/CH483.csv', nATP=1.0, ESfrac=1.0, mol_CH4=3e-8, dbpath='allMtestc')
 # extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/05CH483.csv', nATP=0.5, ESfrac=1.0, mol_CH4=3e-8, dbpath='allMtestc')
 # extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/15CH483.csv', nATP=1.5, ESfrac=1.0, mol_CH4=3e-8, dbpath='allMtestc')
 
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(6,6))
 # plot_powers(axs[0], 'MF', 'Fraction', files=('data/EmpiricalMethanogens/CH483.csv',), unitBM=False, theory=False, dbpath='allMtest')#, lowhigh=['data/EmpiricalMethanogens/05CH483.csv', 'data/EmpiricalMethanogens/15CH483.csv'])
 plot_powers(ax, 'PThrottle', 'Maintenance Power', files=('data/EmpiricalMethanogens/CH483.csv',), unitBM=False, theory=False, dbpath='allMtestc', lowhigh=['data/EmpiricalMethanogens/05CH483.csv', 'data/EmpiricalMethanogens/15CH483.csv'])
 
@@ -192,23 +198,23 @@ PT, Ti, L10, L2 = MaintenanceRange_nATPs(Trange=T, mCH4=3e-8, Tlst=True, fractio
 
 
 
-ax.plot(T,PT[0], c='tab:orange', label="'Typical' Methanogen")
+ax.plot(T,PT[0], c='tab:orange', label="`Typical' Methanogen")
 ax.fill_between(T, PT[1], PT[2], color='tab:orange', alpha=0.6)
 # axs[i].plot(T,PT[3], c='r')
 # axs[i].fill_between(T, PT[4], PT[5], color='r', alpha=0.6)
 ax.plot(T,Ti[0], c='k', label='Empirical Estimate: Tijhuis et al. (1993)')
 ax.fill_between(T, Ti[1], Ti[2], color='k', alpha=0.6)
-ax.plot(T,L10[0], c='g', label='Theory Minimum: Lever et al. (2015)')
+ax.plot(T,L10[0], c='g', label='Theory Minimum: Lever et al. (2015) - 10% racemization')
 ax.fill_between(T, L10[1], L10[2], color='g', alpha=0.6)
-ax.plot(T,L2[0], c='c', label='Theory Minimum: Lever et al. (2015)')
+ax.plot(T,L2[0], c='c', label='Theory Minimum: Lever et al. (2015) - 2% racemization')
 ax.fill_between(T, L2[1], L2[2], color='c', alpha=0.6)
 
 ax.set_yscale('log')
 
-plt.legend(loc=4, fontsize=18)
+plt.legend(loc='upper center', fontsize=11, bbox_to_anchor=(0.5,-.1))
 plt.tight_layout()
 # plt.subplots_adjust(hspace=0.0)
-# plt.savefig('MP.png')
+plt.savefig('MP.pdf')
 plt.show()
 
 
