@@ -52,7 +52,7 @@ def CH4Rate_from_GrowthRate(growthrate, CH4conc=1e-8):
 
 
 def avg_org_params(paramchange={}):
-    """get the 'average' methanogen from the methanogens csv."""
+    """get the 'average' methanogen parameters from the methanogens csv."""
     df = pd.read_csv(_m_file, header=0)
     widths, lengths, Ts, pHs, CH4s, Pressures, GRs = [],[],[],[],[],[],[]
     for index, row in df.iterrows():
@@ -75,6 +75,7 @@ def avg_org_params(paramchange={}):
 
 
 def avg_org_efficiencies(Temp, paramchange={}):
+    """Get the parameters of the TOM at the passed temperature. """
     width, length, T, pH, CH4, Pressure, GR = avg_org_params(paramchange)
     GRT = math.exp(GR[0]*(Temp)+GR[1])
     CH4T = math.exp(CH4[0]*(Temp)+CH4[1])
@@ -96,5 +97,4 @@ def avg_org_efficiencies(Temp, paramchange={}):
     org_uniqueparams = deepcopy(_defaultparams)
     org_uniqueparams.update(avg_org_uniqueparams)
     org_uniqueparams.update(paramchange)
-    # growth rate from Ver Eecke 2013
     return org_uniqueparams, GRT

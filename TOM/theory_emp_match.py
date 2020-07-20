@@ -174,34 +174,27 @@ def MaintenanceRange_nATPs(Trange=[275,295,315,335,355,375], Perform=True, fract
 
 
 
+dbpath = 'allMtestc' # path to the database for this data
 
 
-
-
-
-# es.db_helper.create_major_tables(replace=False, dbpath='allMtestc')
-
-# extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/CH483.csv', nATP=1.0, ESfrac=1.0, mol_CH4=3e-8, dbpath='allMtestc')
-# extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/05CH483.csv', nATP=0.5, ESfrac=1.0, mol_CH4=3e-8, dbpath='allMtestc')
-# extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/15CH483.csv', nATP=1.5, ESfrac=1.0, mol_CH4=3e-8, dbpath='allMtestc')
-
+# remove this docstring to perform the simluation
+"""
+es.db_helper.create_major_tables(replace=False, dbpath=dbpath)
+extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/CH483.csv', nATP=1.0, ESfrac=1.0, mol_CH4=3e-8, dbpath=dbpath)
+extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/05CH483.csv', nATP=0.5, ESfrac=1.0, mol_CH4=3e-8, dbpath=dbpath)
+extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/15CH483.csv', nATP=1.5, ESfrac=1.0, mol_CH4=3e-8, dbpath=dbpath)
+"""
 
 fig, ax = plt.subplots(figsize=(6,6))
-# plot_powers(axs[0], 'MF', 'Fraction', files=('data/EmpiricalMethanogens/CH483.csv',), unitBM=False, theory=False, dbpath='allMtest')#, lowhigh=['data/EmpiricalMethanogens/05CH483.csv', 'data/EmpiricalMethanogens/15CH483.csv'])
 plot_powers(ax, 'PThrottle', 'Maintenance Power', files=('data/EmpiricalMethanogens/CH483.csv',), unitBM=False, theory=False, dbpath='allMtestc', lowhigh=['data/EmpiricalMethanogens/05CH483.csv', 'data/EmpiricalMethanogens/15CH483.csv'])
 
 
-T = range(273,375)#[275,285,295,305,315,325,335,345,355,365,375]
-# PT83, Ti, L10, L2 = TijhuisRange_nATPs(Trange=T, mCH4=3e-8, Tlst=True, fraction=False, Perform=False, dbpath=nmp.std_dbpath)
-# PT83 = TijhuisRange_nATPs(Trange=[273,274], mCH4=3e-8,fraction=False, Perform=True, dbpath='allMtestc')
-PT, Ti, L10, L2 = MaintenanceRange_nATPs(Trange=T, mCH4=3e-8, Tlst=True, fraction=False, Perform=False, dbpath='allMtestc')
-
+T = range(273,375)
+PT, Ti, L10, L2 = MaintenanceRange_nATPs(Trange=T, mCH4=3e-8, Tlst=True, fraction=False, Perform=False, dbpath=dbpath)
 
 
 ax.plot(T,PT[0], c='tab:orange', label="`Typical' Methanogen")
 ax.fill_between(T, PT[1], PT[2], color='tab:orange', alpha=0.6)
-# axs[i].plot(T,PT[3], c='r')
-# axs[i].fill_between(T, PT[4], PT[5], color='r', alpha=0.6)
 ax.plot(T,Ti[0], c='k', label='Empirical Estimate: Tijhuis et al. (1993)')
 ax.fill_between(T, Ti[1], Ti[2], color='k', alpha=0.6)
 ax.plot(T,L10[0], c='g', label='Theory Minimum: Lever et al. (2015) - 10% racemization')
@@ -216,53 +209,3 @@ plt.tight_layout()
 # plt.subplots_adjust(hspace=0.0)
 plt.savefig('MP.pdf')
 plt.show()
-
-
-
-
-""" THIS WAS USED TO CHECK OUT THE SUPPLY, THROTTLE AND FRACTIONS. MAY BE USEFUL IN THE FUTURE"""
-
-# fig, axs = plt.subplots(nrows=3)
-#
-# T = [275,285,295,305,315,325,335,345,355,365,375]
-# Edict = extractor.allmethanogens_fromcsv(filename='/data/EmpiricalMethanogens/CH483.csv', extra=True)
-# PT83f, Tiaf = TijhuisRange_nATPs(Trange=T, mCH4=3e-8, Tlst=True, fraction=True, Perform=False, dbpath=nmp.std_dbpath)
-# PT83, Tia = TijhuisRange_nATPs(Trange=T, mCH4=3e-8, Tlst=True, fraction=False, Perform=False, dbpath=nmp.std_dbpath)
-#
-# methTemps=Edict['Temp']
-# methSupp=Edict['PSupply']
-# methThrot=Edict['PThrottle']
-# methFrac=[]
-#
-# for s, t in zip(methSupp, methThrot):
-#     methFrac.append(t/s)
-#
-#
-# avgSupp=[]
-# avgThrot=[]
-# avgFrac=[]
-#
-# for pt, ptf in zip(PT83[0], PT83f[0]):
-#     try:
-#         avgSupp.append(pt/ptf)
-#     except:
-#         avgSupp.append(1e-12)
-#     avgThrot.append(pt)
-#     avgFrac.append(ptf)
-#
-#
-# axs[0].scatter(methTemps,methSupp)
-# axs[0].plot(T,avgSupp)
-# axs[0].set_ylabel('Supply')
-# axs[0].set_yscale('log')
-#
-# axs[1].scatter(methTemps,methThrot)
-# axs[1].plot(T,avgThrot)
-# axs[1].set_ylabel('Throttle')
-# axs[1].set_yscale('log')
-#
-# axs[2].scatter(methTemps,methFrac)
-# axs[2].plot(T,avgFrac)
-# axs[2].set_ylabel('Fraction')
-#
-# plt.show()

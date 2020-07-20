@@ -20,7 +20,7 @@ thisdbpath=nmp.std_dbpath
 Trange=np.linspace(275,375, num=21)
 nATPs=np.linspace(0.5,1.5, num=11)
 
-# for performing the simulation
+# for performing the simulation, remove this docstring.
 """
 for T in Trange:
     for n in nATPs:
@@ -68,7 +68,7 @@ plt.savefig('Emesh.pdf')
 
 
 
-# mesh color: maintenance Energy
+# mesh color: constant basal maintenance Energy
 """
 Esreq = Esreq[:-1, :-1]
 Trange=np.linspace(280,375, num=20)

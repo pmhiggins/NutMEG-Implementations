@@ -13,24 +13,8 @@ from NutMEG.reactor.saved_systems.VenusDrop import VenusDrop
 dbpath= es.util.NutMEGparams.std_dbpath
 es.db_helper.create_major_tables(replace=False)
 
-defaultparams = {'Tdef':'None',
-  'mol_CO2':0.003,
-  'mol_H2':0.0014,
-  'MP':0,
-  'radius':0.8e-6,
-  'k_RTP':((0.4e-12)/(0.003*(0.0014**4)))/(3600*(2**((355.16-298)/10))),
-  'n_ATP':1.0,
-  'Pconc':0.1,
-  'uptake_consts':{'P':1e-10},
-  'mol_CH4':1e-9,
-  'pH':6.8,
-  'lifespan':float('inf'),
-  'inputs':{},
-  'Temp':355.15}
-
 class efficiencies:
     """Simple class to get the efficiencies of methanogens."""
-
 
 
     def __init__(self, orgname='M_jannaschii', target={'GrowthRate':0.0003}, P_bar=False, *args, **kwargs):
@@ -65,6 +49,8 @@ class efficiencies:
 
     @classmethod
     def get_eff(cls, orgname, Temp=None, paramchange={}):
+        """Generate an efficiencies object using the parameters saved in
+        unique_efficiencies. Use paramchange to override any of them."""
         org_uniqueparams, Gr = None, None
 
         if orgname=='M_jannaschii':
@@ -79,6 +65,7 @@ class efficiencies:
 
 
     def setup_methanogenesis(self, R):
+        """return a methanogenesis reaction object in reactor R"""
 
         CO2 = reaction.reagent('CO2(aq)', R.env, phase='aq')
         H2aq = reaction.reagent('H2(aq)', R.env, phase='aq')
@@ -96,7 +83,18 @@ class efficiencies:
 
 
     def initial_conditions(self, R, scale=1.0, NH3conc=0.1, H2Sconc=0.1, setupcomp=True):
-        #scale : scaler for concentrations
+        """ set up the reactor by filling it with reagents and adding methanogeneis.
+
+        scale : float
+            scale by which to change the activity of CO2 and H2, if desired.
+        NH3conc : float
+            concentration of NH3 to put into the reactor
+        H2Sconc : float
+            concentration of H2S to put into the reactor.
+        setupcomp : boolean
+            True to set up the composition as well as the reaction. False
+            to just add a methanogenesis reaction.
+        """
 
         if setupcomp:
             mol_CO2 = self.params['mol_CO2']*scale #LB3 pg11
@@ -143,6 +141,7 @@ class efficiencies:
         R.add_reaction(thermaloa)
 
     def getvol(self):
+        """Use the 'shape' key in params to work out the volume and mass."""
         if self.params['shape'] == 'sphere':
             vol=(4/3)*math.pi*((self.params['radius'])**3)
         elif self.params['shape'] == 'rod':
@@ -153,6 +152,20 @@ class efficiencies:
 
 
     def get_efficiency(self, Rname='MM8020', startnum=500, ESfrac=1.0, scale=1.0, dbpath=nmp.std_dbpath):
+        """Use the NutMEmatcher module to work out the maintenance efficiency
+        required to reach the empirical growth rates.
+
+        Rname : str
+            name for the reactor. Deafult MM8020 represention 80/20 CO2 to H2
+        startnum : int
+            initial number of organisms to start simulation.
+        ESfrac : float
+            scaler by which to change the Synthesis energy from defaul values
+        sclae : float
+            scaler by which to change the concentration of H2 and CO2.
+        dbpath : str
+            path to the NutMEG database.
+        """
 
         R = es.reactor(Rname, workoutID=False, pH=self.params['pH'], dbpath=dbpath)
         R.change_T(self.params['Temp'])

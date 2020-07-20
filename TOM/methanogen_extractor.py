@@ -11,6 +11,9 @@ import NutMEG.util.NutMEGparams as nmp
 
 
 def allmethanogens_tocsv(filename='output.csv', nATP=1.0, ESfrac=1.0, scale=1.0, fixed_size=None, mol_CH4=1e-9, dbpath=nmp.std_dbpath):
+    """Save the output from efficiencies.get_efficiency to a csv file for
+    each of the empirical methanogens.
+    """
     resdict={}
 
     file = os.path.dirname(__file__)+'/data/methanogens.csv'
@@ -59,7 +62,9 @@ def allmethanogens_tocsv(filename='output.csv', nATP=1.0, ESfrac=1.0, scale=1.0,
     resdf.to_csv(filename)
 
 def allmethanogens_fromcsv(filename='output.csv', extra=False):
-    #previously get_EPT
+    """Extract the efficiencies.get_efficiency data for the empirical
+     methanogens from a .csv file generated using allmethanogens_tocsv above.
+     """
     resdf2 = pd.read_csv(filename)
     ret = {'MF':[], 'PThrottle':[], 'PSupply':[], 'PGrowth':[], 'SimID':[], 'OrgID':[], 'Temp':[], 'vol':[], 'source':[], 'nut':[]}
 #E, PT, PS, PG, SimID, OrgID, Temp, v, source, nut = [], [], [], [], [], [], [], [], [], []
@@ -81,7 +86,8 @@ def allmethanogens_fromcsv(filename='output.csv', extra=False):
 
 
 def get_extra_params(index):
-
+    """helper function for allmethanogens_fromcsv. Extract the growth rate
+    source and nutrients elements from the original methanogen csv. """
     file = os.path.dirname(__file__)+'/data/methanogens.csv'
     df = pd.read_csv(file, header=0)
     ret = {}
@@ -94,6 +100,11 @@ def get_extra_params(index):
 
 
 def iterateESynths(ESlist, orgname, paramchange={}, save=None, dbpath=nmp.std_dbpath):
+    """Using the Esynthfrac argument for eff.get_efficiency, work out what maintenance
+    requirement would be needed if synthesis were more/less expensive for the scalers in
+    ESlist.
+    If save is passed as a str, save to a csv there.
+    """
     E, PT, PG, PS, S = [], [], [], [], []
     for e in ESlist:
         eff = efficiencies.get_eff(orgname, Temp=paramchange.get('Temp', 298), paramchange=paramchange)
@@ -114,7 +125,9 @@ def iterateESynths(ESlist, orgname, paramchange={}, save=None, dbpath=nmp.std_db
         resdf.to_csv(save)
     return E, PT, PG, PS, S
 
+
 def extract_Esynths_csv(filename):
+    """Extract and return saved data from iterateESynths."""
     resdf2 = pd.read_csv(filename)
     E, PT, PS, PG, S = [], [], [], [],[]
     for index, row in resdf2.iterrows():

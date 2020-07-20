@@ -20,8 +20,16 @@ import matplotlib.animation as animation
 this_dbpath = 'amparams_db'
 es.db_helper.create_major_tables(replace=False, dbpath=this_dbpath)
 
+""" THIS CODE IS FOR GENERATING THE SUPPLEMENTAL ANIMATION.
+
+THERE IS SOME OVERLAP WITH EnergyNutrientLimitation.py
+"""
 
 def get_peffs(other_params={}, MPscale=1, T=300):
+    """Return a list of efficincies objects for the typical optimal methanogen,
+    each having different nATP yield (0.5, 1.0, 1.5 per mol CO2). Change individual
+    parameters for analysis by passing other_params.
+    """
     E, PT, PS, PG, S = extractor.extract_Esynths_csv('data/TOM_PT/3e-08_'+str(T))
     E05, PT05, PS05, PG05, S05 = extractor.extract_Esynths_csv('data/TOM_PT/05_3e-08_'+str(T))
     E15, PT15, PS15, PG15, S15 = extractor.extract_Esynths_csv('data/TOM_PT/15_3e-08_'+str(T))
@@ -53,6 +61,10 @@ def get_peffs(other_params={}, MPscale=1, T=300):
 
 
 def inbetweens(peffs, ax, rmv=False, stoppers={}, T=300, dt=2000, hatch=None, alph=0.6):
+    """Plot growth curves for the three eddiciencies objects in peffs, with a
+    fill_between plot between indexes 0 and 2, and a straight line at index 1
+    ATP yield of 1 mol per mol CO2.
+    """
     collist=['#2c7bb6','#abd9e9', '#fdae61', '#d7191c', 'm']
     for ic, peff in enumerate(peffs):
         L,O,S,t,pop= [0,0,0], [0,0,0],[0,0,0],[0,0,0],[0,0,0]
@@ -146,6 +158,7 @@ def boxes(peffs, ax, rmv=False, stoppers={}, data='', plot=False, boxlst=[[],[]]
 
 
 def maintenancepeffs(T=300):
+    """return peffs with fractionally increased maintenance costs."""
     return [
       get_peffs(MPscale=1, T=T),
       get_peffs(MPscale=1.01, T=T),
@@ -154,6 +167,7 @@ def maintenancepeffs(T=300):
       ]
 
 def CO2peffs(T=300):
+    """return peffs with fractionally reduced CO2 concentrations"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
     for peff in peffs[1]:
         peff.params['mol_CO2'] = peff.params['mol_CO2']*0.99
@@ -167,6 +181,7 @@ def CO2peffs(T=300):
     return peffs
 
 def H2peffs(T=300):
+    """return peffs with fractionally reduced H2 concentrations"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
 
     for peff in peffs[1]:
@@ -178,11 +193,13 @@ def H2peffs(T=300):
     return peffs
 
 def Ppeffs(T=300):
+    """return peffs with limiting P concentration"""
     return [get_peffs(T=T),
       get_peffs(T=T, other_params={'Pconc':1e-8}),
       get_peffs(T=T, other_params={'Pconc':1e-10})]
 
 def CO2inpeffs(T=300):
+    """return peffs with an outflow of CO2"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
     for peff in peffs[1]:
         peff.params['inputs'] = {'CO2(aq)':-1e-12}
@@ -191,6 +208,7 @@ def CO2inpeffs(T=300):
     return peffs
 
 def H2inpeffs(T=300):
+    """return peffs with an outflow of H2"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
     for peff in peffs[1]:
         peff.params['inputs'] = {'H2(aq)':-1e-12}
@@ -199,6 +217,7 @@ def H2inpeffs(T=300):
     return peffs
 
 def lifespanpeffs(T=300):
+    """return peffs with a lifespan"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
 
     for peff in peffs[1]:
@@ -208,6 +227,7 @@ def lifespanpeffs(T=300):
     return peffs
 
 def Puptakepeffs(T=300):
+    """return peffs with an altered P rate constant"""
     return [get_peffs(T=T),
       get_peffs(T=T, other_params={'uptake_consts':{'P':1e-18}, 'Pconc':0.10008}),
       get_peffs(T=T, other_params={'uptake_consts':{'P':1e-20}, 'Pconc':0.10011})]

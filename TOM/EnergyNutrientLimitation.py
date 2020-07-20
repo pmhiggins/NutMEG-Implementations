@@ -22,11 +22,11 @@ THIS CODE WAS USED FOR FIGURES 3 AND 4: GROWTH CURVES AND TEMPERATURE CURVES
 
 """
 
-this_dbpath = 'amparams_db'
+this_dbpath = 'amparams_db' # path to the NutMEG database.
 
 es.db_helper.create_major_tables(replace=False, dbpath=this_dbpath)
 
-#Set some global parameters
+# Set some global parameters
 
 # use this boolean to toggle whether simulations should be deleted and rerun
 # false will use the data we already have if available.
@@ -41,6 +41,10 @@ mpl.rcParams['mathtext.fontset'] = 'cm'
 
 
 def get_peffs(other_params={}, MPscale=1, T=300):
+    """Return a list of efficincies objects for the typical optimal methanogen,
+    each having different nATP yield (0.5, 1.0, 1.5 per mol CO2). Change individual
+    parameters for analysis by passing other_params.
+    """
     E, PT, PS, PG, S = extractor.extract_Esynths_csv('data/TOM_PT/3e-08_'+str(T))
     E05, PT05, PS05, PG05, S05 = extractor.extract_Esynths_csv('data/TOM_PT/05_3e-08_'+str(T))
     E15, PT15, PS15, PG15, S15 = extractor.extract_Esynths_csv('data/TOM_PT/15_3e-08_'+str(T))
@@ -72,7 +76,10 @@ def get_peffs(other_params={}, MPscale=1, T=300):
 
 
 def inbetweens(peffs, ax, rmv=False, stoppers={}, T=300, dt=2000, hatch=None, alph=0.6):
-    # collist=['b','g','r','c','m']
+    """Plot growth curves for the three eddiciencies objects in peffs, with a
+    fill_between plot between indexes 0 and 2, and a straight line at index 1
+    ATP yield of 1 mol per mol CO2.
+    """
     collist=['#2c7bb6','#abd9e9', '#fdae61', '#d7191c']
     for ic, peff in enumerate(peffs):
         L,O,S,t,pop= [0,0,0], [0,0,0],[0,0,0],[0,0,0],[0,0,0]
@@ -92,7 +99,6 @@ def inbetweens(peffs, ax, rmv=False, stoppers={}, T=300, dt=2000, hatch=None, al
 
         print(T, dt)
 
-
         if t[0][-1]<t[2][-1]:
             for j in range(int((t[2][-1]-t[0][-1])/dt)):
                 t[0].append(t[0][-1]+dt)
@@ -102,7 +108,6 @@ def inbetweens(peffs, ax, rmv=False, stoppers={}, T=300, dt=2000, hatch=None, al
                 t[2].append(t[2][-1]+dt)
                 pop[2].append(pop[2][-1])
 
-        # print(len(t[0]), len(t[1]), len(pop[0]), len(pop[1]))
         try:
             if hatch!=None:
                 ax.plot(t[1],pop[1], c=collist[ic], ls='--', alpha=alph)
@@ -117,6 +122,7 @@ def inbetweens(peffs, ax, rmv=False, stoppers={}, T=300, dt=2000, hatch=None, al
 
 
 def maintenancepeffs(T=300):
+    """return peffs with fractionally increased maintenance costs."""
     return [
       get_peffs(MPscale=1, T=T),
       get_peffs(MPscale=1.01, T=T),
@@ -125,6 +131,7 @@ def maintenancepeffs(T=300):
       ]
 
 def CO2peffs(T=300):
+    """return peffs with fractionally reduced CO2 concentrations"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]#, get_peffs(T=T)]
     for peff in peffs[1]:
         peff.params['mol_CO2'] = peff.params['mol_CO2']*0.99
@@ -138,6 +145,7 @@ def CO2peffs(T=300):
     return peffs
 
 def H2peffs(T=300):
+    """return peffs with fractionally reduced H2 concentrations"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
 
     for peff in peffs[1]:
@@ -149,11 +157,13 @@ def H2peffs(T=300):
     return peffs
 
 def Ppeffs(T=300):
+    """return peffs with limiting P concentration"""
     return [get_peffs(T=T),
       get_peffs(T=T, other_params={'Pconc':1e-8}),
       get_peffs(T=T, other_params={'Pconc':1e-10})]
 
 def CO2inpeffs(T=300):
+    """return peffs with an outflow of CO2"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
     for peff in peffs[1]:
         peff.params['inputs'] = {'CO2(aq)':-1e-12}
@@ -162,6 +172,7 @@ def CO2inpeffs(T=300):
     return peffs
 
 def H2inpeffs(T=300):
+    """return peffs with an outflow of H2"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
     for peff in peffs[1]:
         peff.params['inputs'] = {'H2(aq)':-1e-12}
@@ -170,8 +181,8 @@ def H2inpeffs(T=300):
     return peffs
 
 def lifespanpeffs(T=300):
+    """return peffs with a lifespan"""
     peffs = [get_peffs(T=T), get_peffs(T=T), get_peffs(T=T)]
-
     for peff in peffs[1]:
         peff.params['lifespan'] = 2e5
     for peff in peffs[2]:
@@ -179,6 +190,7 @@ def lifespanpeffs(T=300):
     return peffs
 
 def Puptakepeffs(T=300):
+    """return peffs with an altered P rate constant"""
     return [get_peffs(T=T),
       get_peffs(T=T, other_params={'uptake_consts':{'P':1e-18}, 'Pconc':0.10008}),
       get_peffs(T=T, other_params={'uptake_consts':{'P':1e-20}, 'Pconc':0.10011})]
@@ -186,7 +198,7 @@ def Puptakepeffs(T=300):
 
 
 def growthcurves(Ts=[280,300,320], dts=[3000,2000,3000-(40000/25)]):
-
+    """plot growth curves (manuscript Figure 3)"""
     fig, axs = plt.subplots(nrows=len(Ts), ncols=4, figsize=(9,8), sharey=True)
 
 
@@ -248,16 +260,27 @@ def growthcurves(Ts=[280,300,320], dts=[3000,2000,3000-(40000/25)]):
 growthcurves()
 
 
-#TODO: this has a messy inclusion of dt. So with rmv=True this won't work very well
-# pass it back up the chain!
 def plot_Trange(energypeffs, nutrientpeffs, axs, rmv=False, stoppers={}, Tvals=range(280,331), hatch=None):
-    # collist=['b','g','r','c','m']
+    """Function for plotting Figure 4.
+
+    Plots one list of energy limitations and one of nutrient limitations at a
+    time, passed in the form of efficiencies objects, energypeffs or nutrientpeffs.
+    Pass rmv as True to delete results and perform simulations again.
+
+    In a previous version the hatch option was used to hatch some of the plots,
+    now it is used to plot the seperate axes in multiple calls to this funcion.
+    """
     collist=['#2c7bb6','#abd9e9', '#fdae61', '#d7191c']
     energydf = pd.DataFrame(energypeffs)
     nutrientdf = pd.DataFrame(nutrientpeffs)
     print(energydf)
-    dt=1e15
     for ic in range(len(energydf.columns)):
+        # choose a good timestep. Helps with the fill_between.
+        dt =3000-((num)*(1000/25))
+        if T==300:
+            dt=2000
+        if T==325:
+            dt=1000
 
         GR = [[],[],[]]
         BM = [[],[],[]]
@@ -346,6 +369,7 @@ def plot_Trange(energypeffs, nutrientpeffs, axs, rmv=False, stoppers={}, Tvals=r
 
 
 def grbmbs(Tvals=range(280,331)):
+    """Function for the final plot which became Figure 4 in the manuscript. """
 
     fig, axs = plt.subplots(nrows=3, ncols=4, figsize=(9,8), sharey='row')
 
@@ -401,8 +425,9 @@ def grbmbs(Tvals=range(280,331)):
 
 
 
-# export typical optimal methanogen parameters to a csv file
+
 def k_RTPs(Trange=range(273,373)):
+    """ export typical optimal methanogen parameters to a csv file"""
     Klst, MPlst, CO2lst, H2lst, CH4lst, Plst, vollst, metlst =[],[],[],[],[],[],[], []
     for T in Trange:
         pe = get_peffs(T=T)[1]

@@ -30,6 +30,7 @@ def concs_vs_t(plot=True, Trange=range(275,375),CH4=3e-8):
 # concs_vs_t()
 
 def ESynth():
+    """Plot energetic cost of synthesis reactions per dry g of cells"""
     AAl = []
     Pl = []
     tot=[]
@@ -65,6 +66,9 @@ def CH4get(growthrate, CH4conc=3e-8):
     return CH4conc*growthrate*(math.exp(growthrate) - 1)
 
 def avgCH4_GR():
+    """Plot range of CH4 production rates an optimal growth rates for the
+    empirical methanogens, and their linear regressions.
+    """
     file = 'data/methanogens.csv'
     df = pd.read_csv(file, header=0)
     Ts, CH4s, Pressures, GRs = [],[],[],[]
