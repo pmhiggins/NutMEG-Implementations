@@ -16,4 +16,4 @@ Welcome! This directory contains the code used to produce and analyse the result
 
 `GCanimation.py` is for generating the growth curve animation (also a supplementary figure).
 
-**Please note:** The data directory contains some of the data used in the manuscript but excludes the growth simulations due to the large NutMEG database this would create (several GB). When run, specifically `EnergyNutrientLimitation.py` this code will provide identical results but may take some time.
+**Please note:** The data directory contains all of the data used in the manuscript but excludes the full output of growth simulations due to the large NutMEG database this would create (several GB). When run this code will provide identical results, and one could rerun the full simulation by toggling calls to `perform_sim` in the analysis files above (though this will take a long time).
