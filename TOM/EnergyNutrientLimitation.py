@@ -284,12 +284,15 @@ def growthcurves(Ts=[280,300,320], dts=[3000,2000,3000-(40000/25)]):
     for ax in axs:
         ax[0].set_ylabel('Biomass [cells $\mathregular{L}^{-1}$]')
         for a in ax:
-
             a.set_yscale('log')
             a.set_xscale('log')
             a.set_xlim(1e4, 5e7)
             a.grid(b=True, which='major', color='#666666', linestyle='-', alpha=0.8)
             a.set_xlabel('Time [s]')
+
+    axs[0][0].get_xaxis().set_ticks([])
+    axs[1][0].get_xaxis().set_ticks([])
+
 
     plt.tight_layout()
     fig.subplots_adjust(wspace=0, hspace=0)
@@ -355,7 +358,7 @@ def plot_Trange(limiterpeffs, colno, axs, rmv=False, stoppers={}, Tvals=range(28
             sav = pd.DataFrame({'Temp':Tvals,'GrowthRate_nATP05':GR[0],
               'FinalBiomass_nATP05':BM[0],'FinalCH4_nATP05':BS[0],
               'GrowthRate_nATP10':GR[1], 'FinalBiomass_nATP10':BM[1],
-              'FinalCH4_nATP10':BS[0], 'GrowthRate_nATP15':GR[2],
+              'FinalCH4_nATP10':BS[1], 'GrowthRate_nATP15':GR[2],
               'FinalBiomass_nATP15':BM[2],'FinalCH4_nATP15':BS[2]})
             sav.to_csv(fromcsv[1]+'_'+str(ic)+'.csv')
 
@@ -393,14 +396,10 @@ def grbmbs(Tvals=range(280,331)):
         _Puptakepeffs.append(Puptakepeffs(T=T))
 
     # plot the growth rates, biomass and methane
-    # plot_Trange(_co2peffs, _Ppeffs, axs, Tvals=Tvals)#, dt=3000)
     plot_Trange(_co2peffs,0, axs, Tvals=Tvals, fromcsv=[True, 'data/tempcurves/CO2'])#, dt=3000)
     plot_Trange(_h2peffs,1, axs, Tvals=Tvals, fromcsv=[True, 'data/tempcurves/H2'])#, dt=3000)
     plot_Trange(_Ppeffs,2, axs, Tvals=Tvals, fromcsv=[True, 'data/tempcurves/P'])#, dt=3000)
     plot_Trange(_Puptakepeffs,3, axs, Tvals=Tvals, fromcsv=[True, 'data/tempcurves/kP'])#, dt=3000)
-
-
-    # plot_Trange(_h2peffs, _Puptakepeffs, axs, Tvals=Tvals, hatch='x')#, dt=3000)
 
     # tidy up the plot
     axs[0][0].set_ylabel('Peak Growth Rate [$\mathregular{hr}^{-1}$]')
