@@ -80,14 +80,14 @@ def inbetweens(peffs, ax, rmv=False, stoppers={}, T=300, dt=2000, hatch=None, al
             for k, p in zip(t2, pop2):
                 t[i].append(k[0])
                 pop[i].append(p[0])
-
+        newdt=int(t[0][-1]-t[0][-2])
         if t[0][-1]<t[2][-1]:
-            for j in range(int((t[2][-1]-t[0][-1])/dt)):
-                t[0].append(t[0][-1]+dt)
+            for j in range(int((t[2][-1]-t[0][-1])/newdt)):
+                t[0].append(t[0][-1]+newdt)
                 pop[0].append(pop[0][-1])
         else:
-            for j in range(int((t[0][-1]-t[2][-1])/dt)):
-                t[2].append(t[2][-1]+dt)
+            for j in range(int((t[0][-1]-t[2][-1])/newdt)):
+                t[2].append(t[2][-1]+newdt)
                 pop[2].append(pop[2][-1])
         try:
             if hatch!=None:
@@ -98,6 +98,7 @@ def inbetweens(peffs, ax, rmv=False, stoppers={}, T=300, dt=2000, hatch=None, al
                 ax.fill_between(t[0], pop[0], pop[2], alpha=alph, color=collist[ic])
         except ValueError:
             inbetweens(peffs, ax, rmv=True, stoppers=stoppers, T=T, dt=dt, alph=alph)
+            #continue
 
 
 def boxes(peffs, ax, rmv=False, stoppers={}, data='', plot=False, boxlst=[[],[]], T=300, dt=2000):
