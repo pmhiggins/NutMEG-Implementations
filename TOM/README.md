@@ -15,3 +15,5 @@ Welcome! This directory contains the code used to produce and analyse the result
 `supplement.py` is for generating the supplementary figures.
 
 `GCanimation.py` is for generating the growth curve animation (also a supplementary figure).
+
+**Please note:** The data directory contains some of the data used in the manuscript but excludes the growth simulations due to the large NutMEG database this would create (several GB). When run, specifically `EnergyNutrientLimitation.py` this code will provide identical results but may take some time.
