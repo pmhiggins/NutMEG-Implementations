@@ -14,6 +14,8 @@ mpl.rcParams['font.family'] = 'sans-serif'
 mpl.rcParams['font.sans-serif'] = 'cmr10'
 mpl.rcParams['axes.linewidth'] = 2
 mpl.rcParams['mathtext.fontset'] = 'cm'
+mpl.rcParams['xtick.labelsize'] = 12
+mpl.rcParams['ytick.labelsize'] = 12
 
 thisdbpath=nmp.std_dbpath
 
@@ -53,17 +55,17 @@ for i in range(len(nATPs)):#ncdd.shape[0]):
         Esreq[i,j] = -c/m
 
 
-plt.pcolormesh(ncdd,Tcdd,Esreq, norm=LogNorm(vmin=Esreq[:-1].min(), vmax=Esreq[:-1].max()), cmap=cmap)
+plt.pcolormesh(ncdd,Tcdd,Esreq, norm=LogNorm(vmin=0.9, vmax=1000), cmap=cmap)
 # add in ,shading='gouraud' above to smooth plot.
 plt.xlabel(r'ATP per mol $\mathregular{CO}_2}$', fontsize=14)
 plt.ylabel('Temperature [K]', fontsize=14)
-cb = plt.colorbar(label='Synthesis scaler needed')
+cb = plt.colorbar(label='Synthesis scaler needed', orientation='vertical')
 cb.set_label(label='Synthesis scaler needed', size=14)
 plt.tight_layout()
 
 # plt.savefig('Emesh.eps')
 plt.savefig('Emesh.pdf')
-
+# plt.show()
 
 
 
