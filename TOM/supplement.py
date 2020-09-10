@@ -1,15 +1,31 @@
 from methanogen_implementer import efficiencies
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import NutMEG as es
 import sys, os, math
 
 sys.path.append(os.path.dirname(__file__)+'/../../NutMEG/')
 from NutMEG.culture.base_organism.synthesis.cell_synthesis import cell_synthesis as synth
 
+# change matplotlib rcparams updating plot fonts etc.
+mpl.rcParams['font.family'] = 'sans-serif'
+mpl.rcParams['font.sans-serif'] = 'cmr10'
+mpl.rcParams['axes.linewidth'] = 2
+mpl.rcParams['mathtext.fontset'] = 'cm'
+mpl.rcParams['xtick.labelsize'] = 14
+mpl.rcParams['ytick.labelsize'] = 14
+mpl.rcParams['lines.markersize'] = 8
+
+
 
 def concs_vs_t(plot=True, Trange=range(275,375),CH4=3e-8):
     """ plot the concentration of CO2, H2, and CH4 with temperature"""
+
+    fig = plt.figure(figsize = (7,5))
+    ax= fig.add_subplot(111)
+
     CO2lst=[]
     H2lst=[]
     for T in Trange:
@@ -17,14 +33,16 @@ def concs_vs_t(plot=True, Trange=range(275,375),CH4=3e-8):
         CO2lst.append(peff.params['mol_CO2'])
         H2lst.append(peff.params['mol_H2'])
     if plot:
-        plt.plot(Trange, CO2lst, label=r'[$\mathregular{CO}_2$]')
-        plt.plot(Trange, H2lst, label=r'[$\mathregular{H}_2$]')
-        plt.plot(Trange, [CH4]*len(Trange), label=r'[$\mathregular{CH}_4$]')
-        plt.ylabel('Concentration [M]')
-        plt.xlabel('Temperature [K]')
+        ax.plot(Trange, CO2lst, label=r'[$\mathregular{CO}_2$]', linewidth=4)
+        ax.plot(Trange, H2lst, label=r'[$\mathregular{H}_2$]', linewidth=4)
+        ax.plot(Trange, [CH4]*len(Trange), label=r'[$\mathregular{CH}_4$]', linewidth=4)
+        ax.set_ylabel('Concentration [M]', fontsize=14)
+        ax.set_xlabel('Temperature [K]', fontsize=14)
         # plt.yscale('log')
-        plt.legend()
-        plt.show()
+        ax.legend()
+        plt.tight_layout()
+        plt.savefig('concs.pdf')
+        # plt.show()
     return CO2lst, H2lst
 
 # concs_vs_t()
@@ -58,8 +76,9 @@ def ESynth():
     plt.legend(fontsize=14)
     plt.tight_layout()
     plt.savefig('ESynth.pdf')
+    # plt.show()
 
-ESynth()
+# ESynth()
 
 def CH4get(growthrate, CH4conc=3e-8):
     """Use reverse Powell method to compute CH4 production rate from growth rate"""
@@ -74,7 +93,7 @@ def avgCH4_GR():
     Ts, CH4s, Pressures, GRs = [],[],[],[]
     for index, row in df.iterrows():
         try:
-            Ts.append((273+(float(row['Min. optimal growth temp.'])+float(row['Max. optimal growth temp.'])))/2)
+            Ts.append(273+((float(row['Min. optimal growth temp.'])+float(row['Max. optimal growth temp.'])))/2)
             Pressures.append(float(row['Pressure'])*1000)
             GRs.append(row['Growth rate']/3600)
             CH4s.append(CH4get(row['Growth rate']/3600))
@@ -85,23 +104,24 @@ def avgCH4_GR():
     CH4pol = np.polyfit(Ts, np.log(CH4s), 1)
     GRspol = np.polyfit(Ts, np.log(GRs), 1)
 
-    fig, axs = plt.subplots(nrows=2)
-    axs[0].scatter(Ts, CH4s, label='Empirical methanogens')
-    axs[0].plot([min(Ts), max(Ts)], np.exp([CH4pol[0]*(min(Ts))+CH4pol[1], CH4pol[0]*(max(Ts))+CH4pol[1]]), c='k', label='Typical optimal methanogen')
+    fig, axs = plt.subplots(nrows=2, figsize=(7,7))
+    axs[0].scatter(Ts, CH4s, label='Empirical methanogens', marker='x')
+    axs[0].plot([min(Ts), max(Ts)], np.exp([CH4pol[0]*(min(Ts))+CH4pol[1], CH4pol[0]*(max(Ts))+CH4pol[1]]), c='k', label='Typical optimal methanogen', linewidth=3)
 
-    axs[1].scatter(Ts, GRs, label='Empirical methanogens')
-    axs[1].plot([min(Ts), max(Ts)], np.exp([GRspol[0]*(min(Ts))+GRspol[1], GRspol[0]*(max(Ts))+GRspol[1]]), c='k',  label='Typical optimal methanogen')
+    axs[1].scatter(Ts, GRs, label='Empirical methanogens', marker='x')
+    axs[1].plot([min(Ts), max(Ts)], np.exp([GRspol[0]*(min(Ts))+GRspol[1], GRspol[0]*(max(Ts))+GRspol[1]]), c='k',  label='Typical optimal methanogen', linewidth=3)
 
     axs[0].set_yscale('log')
     axs[1].set_yscale('log')
 
-    axs[0].set_ylabel('CH4 uptake rate $[\mathregular{mol\ s}^{-1}]$')
-    axs[0].set_ylim(1e-22,1e-14)
+    axs[0].set_ylabel('CH4 uptake rate $[\mathregular{M\ s}^{-1}]$', fontsize=14)
+    axs[0].set_ylim(1e-20,1e-13)
 
-    axs[1].set_ylabel('Growth rate $[\mathregular{s}^{-1}]$')
+    axs[1].set_ylabel('Growth rate $[\mathregular{s}^{-1}]$', fontsize=14)
     axs[1].set_ylim(1e-6,1e-3)
-    axs[1].set_xlabel('Temperature [K]')
-
+    axs[1].set_xlabel('Temperature [K]', fontsize=14)
+    plt.tight_layout()
     plt.savefig('avgCH4GR.pdf')
+    # plt.show()
 
 # avgCH4_GR()

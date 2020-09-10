@@ -37,6 +37,8 @@ mpl.rcParams['font.family'] = 'sans-serif'
 mpl.rcParams['font.sans-serif'] = 'cmr10'
 mpl.rcParams['axes.linewidth'] = 2
 mpl.rcParams['mathtext.fontset'] = 'cm'
+mpl.rcParams['xtick.labelsize'] = 12
+mpl.rcParams['ytick.labelsize'] = 12
 
 
 
@@ -266,10 +268,10 @@ def growthcurves(Ts=[280,300,320], dts=[3000,2000,3000-(40000/25)]):
     axs[0][2].set_title('[$\mathregular{P}}$]')
     axs[0][3].set_title('$k_{P}$')
 
-    axs[2][0].legend([n+' Optimal [$\mathregular{CO}_{2}$]' for n in ['', '-1%','-10%','-40%']], loc='upper center', bbox_to_anchor=(0.5, -0.2))
-    axs[2][1].legend([n+' Optimal [$\mathregular{H}_{2}$]' for n in ['', '-1%','-5%','-20%']], loc='upper center', bbox_to_anchor=(0.5, -0.2))
-    axs[2][2].legend(['[$\mathregular{P}}$] = '+n for n in ['$10^{-1}$ M (plentiful)', '$10^{-8}$ M', '$10^{-10}$ M']], loc='upper center', bbox_to_anchor=(0.5, -0.2))
-    axs[2][3].legend(['$k_{P}$ = '+n+' $\mathregular{s}^{-1}$' for n in ['$10^{-10}$', '$10^{-18}$', '$10^{-20}$']], loc='upper center', bbox_to_anchor=(0.5, -0.2))
+    axs[2][0].legend([n+' Optimal [$\mathregular{CO}_{2}$]' for n in ['', '-1%','-10%','-40%']], loc='upper center', bbox_to_anchor=(0.5, -0.23))
+    axs[2][1].legend([n+' Optimal [$\mathregular{H}_{2}$]' for n in ['', '-1%','-5%','-20%']], loc='upper center', bbox_to_anchor=(0.5, -0.23))
+    axs[2][2].legend(['[$\mathregular{P}}$] = '+n for n in ['$10^{-1}$ M (plentiful)', '$10^{-8}$ M', '$10^{-10}$ M']], loc='upper center', bbox_to_anchor=(0.5, -0.23))
+    axs[2][3].legend(['$k_{P}$ = '+n+' $\mathregular{s}^{-1}$' for n in ['$10^{-10}$', '$10^{-18}$', '$10^{-20}$']], loc='upper center', bbox_to_anchor=(0.5, -0.23))
 
     axs[0][-1].annotate('Temperature: 280 K', xy=(1.1, 0.5), xytext=(1.2, 0.5), xycoords='axes fraction',
             fontsize=12, ha='left', va='center', rotation='vertical',
@@ -282,13 +284,13 @@ def growthcurves(Ts=[280,300,320], dts=[3000,2000,3000-(40000/25)]):
             arrowprops=dict(arrowstyle='-[, widthB=5.0, lengthB=1.0', lw=1.5))
 
     for ax in axs:
-        ax[0].set_ylabel('Biomass [cells $\mathregular{L}^{-1}$]')
+        ax[0].set_ylabel('Biomass [cells $\mathregular{L}^{-1}$]', fontsize=12)
         for a in ax:
             a.set_yscale('log')
             a.set_xscale('log')
             a.set_xlim(1e4, 5e7)
             a.grid(b=True, which='major', color='#666666', linestyle='-', alpha=0.8)
-            a.set_xlabel('Time [s]')
+            a.set_xlabel('Time [s]', fontsize=12)
 
     axs[0][0].get_xaxis().set_ticks([])
     axs[1][0].get_xaxis().set_ticks([])
@@ -297,7 +299,7 @@ def growthcurves(Ts=[280,300,320], dts=[3000,2000,3000-(40000/25)]):
     plt.tight_layout()
     fig.subplots_adjust(wspace=0, hspace=0)
     plt.savefig('growthcurves.pdf')
-    plt.show()
+    # plt.show()
 
 
 
@@ -402,9 +404,9 @@ def grbmbs(Tvals=range(280,331)):
     plot_Trange(_Puptakepeffs,3, axs, Tvals=Tvals, fromcsv=[True, 'data/tempcurves/kP'])#, dt=3000)
 
     # tidy up the plot
-    axs[0][0].set_ylabel('Peak Growth Rate [$\mathregular{hr}^{-1}$]')
-    axs[1][0].set_ylabel('Max Biomass [cells $\mathregular{L}^{-1}$]')
-    axs[2][0].set_ylabel('$\mathregular{CH}_4$ Produced [mol $\mathregular{L}^{-1}$]')
+    axs[0][0].set_ylabel('Peak Growth Rate [$\mathregular{hr}^{-1}$]', fontsize=12)
+    axs[1][0].set_ylabel('Max Biomass [cells $\mathregular{L}^{-1}$]', fontsize=12)
+    axs[2][0].set_ylabel('$\mathregular{CH}_4$ Produced [M]', fontsize=12)
 
     axs[0][0].set_title('[$\mathregular{CO}_2$]')
     axs[0][1].set_title('[$\mathregular{H}_2$]')
@@ -415,7 +417,7 @@ def grbmbs(Tvals=range(280,331)):
         for j, a in enumerate(ax):
             a.grid(b=True, which='major', color='#666666', linestyle='-', alpha=0.8)
             if i == 2:
-                a.set_xlabel('Temperature [K]')
+                a.set_xlabel('Temperature [K]', fontsize=12)
             else:
                 a.tick_params(labelcolor='none', axis='x')
             if j!=0:
@@ -423,15 +425,15 @@ def grbmbs(Tvals=range(280,331)):
             a.set_yscale('log')
             axs[0][j].set_ylim(1e-3, 2e-1)
 
-    axs[2][0].legend([n+' Optimal [$\mathregular{CO}_{2}$]' for n in ['', '-1%','-10%','-40%']], loc='upper center', bbox_to_anchor=(0.5, -0.2))
-    axs[2][1].legend([n+' Optimal [$\mathregular{H}_{2}$]' for n in ['', '-1%','-5%','-20%']], loc='upper center', bbox_to_anchor=(0.5, -0.2))
-    axs[2][2].legend(['[$\mathregular{P}}$] = '+n for n in ['$10^{-1}$ M (plentiful)', '$10^{-8}$ M', '$10^{-10}$ M']], loc='upper center', bbox_to_anchor=(0.5, -0.2))
-    axs[2][3].legend(['$k_{P}$ = '+n+' $\mathregular{s}^{-1}$' for n in ['$10^{-10}$', '$10^{-18}$', '$10^{-20}$']], loc='upper center', bbox_to_anchor=(0.5, -0.2))
+    axs[2][0].legend([n+' Optimal [$\mathregular{CO}_{2}$]' for n in ['', '-1%','-10%','-40%']], loc='upper center', bbox_to_anchor=(0.5, -0.23))
+    axs[2][1].legend([n+' Optimal [$\mathregular{H}_{2}$]' for n in ['', '-1%','-5%','-20%']], loc='upper center', bbox_to_anchor=(0.5, -0.23))
+    axs[2][2].legend(['[$\mathregular{P}}$] = '+n for n in ['$10^{-1}$ M (plentiful)', '$10^{-8}$ M', '$10^{-10}$ M']], loc='upper center', bbox_to_anchor=(0.5, -0.23))
+    axs[2][3].legend(['$k_{P}$ = '+n+' $\mathregular{s}^{-1}$' for n in ['$10^{-10}$', '$10^{-18}$', '$10^{-20}$']], loc='upper center', bbox_to_anchor=(0.5, -0.23))
 
     plt.tight_layout()
     fig.subplots_adjust(wspace=0, hspace=0)
     plt.savefig('grbmbs.pdf')
-    plt.show()
+    # plt.show()
 
 
 

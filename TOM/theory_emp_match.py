@@ -11,6 +11,8 @@ mpl.rcParams['font.family'] = 'sans-serif'
 mpl.rcParams['font.sans-serif'] = 'cmr10'
 mpl.rcParams['axes.linewidth'] = 2
 mpl.rcParams['mathtext.fontset'] = 'cm'
+mpl.rcParams['xtick.labelsize'] = 12
+mpl.rcParams['ytick.labelsize'] = 12
 
 def tovol(vol, lsts):
     """Convert lists passed into unit volume"""
@@ -64,7 +66,7 @@ def plot_powers(ax, key, ilabel, files=('data/EmpiricalMethanogens/CH483.csv',),
     if unitBM:
         ax.errorbar(Edict['Temp'],Edict[key], yerr=Eyerr, fmt='x', c='b', label=ilabel+' per L', ms=10, mew=2)
     else:
-        ax.errorbar(Edict['Temp'],Edict[key], yerr=Eyerr, fmt='x', c='b', label=ilabel+ ' per cell', ms=10, mew=2)
+        ax.errorbar(Edict['Temp'],Edict[key], yerr=Eyerr, fmt='x', c='b', label='Empirical Methanogens', ms=10, mew=2)
 
     if theory and unitBM:
         ax.plot(Tr, Ti, c='k', label='Tijhuis maintenance')
@@ -80,10 +82,10 @@ def plot_powers(ax, key, ilabel, files=('data/EmpiricalMethanogens/CH483.csv',),
         ax.set_ylabel(ilabel+' Power per L biomass', fontsize=11)
         ax.set_ylim(1e-2,1e8)
     else:
-        ax.set_ylabel(ilabel+' W/cell', fontsize=11)
+        ax.set_ylabel(ilabel+' [W $\mathregular{cell}^{-1}$]', fontsize=12)
         ax.set_ylim(1e-19,1e-8)
 
-    ax.set_xlabel('Temperature [K]', fontsize=11)
+    ax.set_xlabel('Temperature [K]', fontsize=12)
     ax.set_xlim(273,373)
     if log:
         ax.set_yscale('log')
@@ -193,9 +195,9 @@ T = range(273,375)
 PT, Ti, L10, L2 = MaintenanceRange_nATPs(Trange=T, mCH4=3e-8, Tlst=True, fraction=False, Perform=False, dbpath=dbpath)
 
 
-ax.plot(T,PT[0], c='tab:orange', label="`Typical' Methanogen")
+ax.plot(T,PT[0], c='tab:orange', label="Typical Optimal Methanogen")
 ax.fill_between(T, PT[1], PT[2], color='tab:orange', alpha=0.6)
-ax.plot(T,Ti[0], c='k', label='Empirical Estimate: Tijhuis et al. (1993)')
+ax.plot(T,Ti[0], c='k', label='Thermodynamic/Empirical Estimate: Tijhuis et al. (1993)')
 ax.fill_between(T, Ti[1], Ti[2], color='k', alpha=0.6)
 ax.plot(T,L10[0], c='g', label='Theory Minimum: Lever et al. (2015) - 10% racemization')
 ax.fill_between(T, L10[1], L10[2], color='g', alpha=0.6)
@@ -204,8 +206,8 @@ ax.fill_between(T, L2[1], L2[2], color='c', alpha=0.6)
 
 ax.set_yscale('log')
 
-plt.legend(loc='upper center', fontsize=11, bbox_to_anchor=(0.5,-.1))
+plt.legend(loc='upper center', fontsize=12, bbox_to_anchor=(0.5,-.12))
 plt.tight_layout()
 # plt.subplots_adjust(hspace=0.0)
 plt.savefig('MP.pdf')
-plt.show()
+# plt.show()
