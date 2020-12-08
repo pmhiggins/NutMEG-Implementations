@@ -17,7 +17,7 @@ contact : p.m.higgins@ed.ac.uk
 
 import sys, os, math, sqlite3, csv
 # the below is needed if you have NutMEG in an adjacent directory
-sys.path.append(os.path.dirname(__file__)+'../../NutMEG/')
+# sys.path.append(os.path.dirname(__file__)+'../../NutMEG/') # no longer needed if NutMEG is properly installed
 from copy import deepcopy
 import numpy as np
 import PIL # only required if you want to save images as .tif
