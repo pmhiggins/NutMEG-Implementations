@@ -187,6 +187,9 @@ extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/05CH483.csv',
 extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/15CH483.csv', nATP=1.5, ESfrac=1.0, mol_CH4=3e-8, dbpath=dbpath)
 """
 
+
+# remove this docsting to plot the maintenance powers
+"""
 fig, ax = plt.subplots(figsize=(6,6))
 plot_powers(ax, 'PThrottle', 'Maintenance Power', files=('data/EmpiricalMethanogens/CH483.csv',), unitBM=False, theory=False, dbpath='allMtestc', lowhigh=['data/EmpiricalMethanogens/05CH483.csv', 'data/EmpiricalMethanogens/15CH483.csv'])
 
@@ -211,3 +214,4 @@ plt.tight_layout()
 # plt.subplots_adjust(hspace=0.0)
 plt.savefig('MP.pdf')
 # plt.show()
+"""
