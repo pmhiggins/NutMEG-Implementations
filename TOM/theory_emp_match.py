@@ -100,7 +100,6 @@ def MaintenanceRange_nATPs(Trange=[275,295,315,335,355,375], Perform=True, fract
     PS1, PS05, PS15 = [],[],[]
 
     for t in Trange:
-        print(t)
         if Perform:
             mf,pt,ps,pg, s = extractor.iterateESynths([1.0], 'averageMethanogen', paramchange={'Tdef':'None', 'Temp':t, 'mol_CH4':mCH4}, save=('data/TOM_PT/'+str(mCH4)+'_'+str(t)), dbpath=dbpath)
             mf05,pt05,ps05,pg05, s05 = extractor.iterateESynths([1.0], 'averageMethanogen', paramchange={'Tdef':'None', 'Temp':t, 'mol_CH4':mCH4, 'n_ATP':0.5}, save=('data/TOM_PT/05_'+str(mCH4)+'_'+str(t)), dbpath=dbpath)
