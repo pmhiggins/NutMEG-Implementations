@@ -100,7 +100,6 @@ def MaintenanceRange_nATPs(Trange=[275,295,315,335,355,375], Perform=True, fract
     PS1, PS05, PS15 = [],[],[]
 
     for t in Trange:
-        print(t)
         if Perform:
             mf,pt,ps,pg, s = extractor.iterateESynths([1.0], 'averageMethanogen', paramchange={'Tdef':'None', 'Temp':t, 'mol_CH4':mCH4}, save=('data/TOM_PT/'+str(mCH4)+'_'+str(t)), dbpath=dbpath)
             mf05,pt05,ps05,pg05, s05 = extractor.iterateESynths([1.0], 'averageMethanogen', paramchange={'Tdef':'None', 'Temp':t, 'mol_CH4':mCH4, 'n_ATP':0.5}, save=('data/TOM_PT/05_'+str(mCH4)+'_'+str(t)), dbpath=dbpath)
@@ -187,6 +186,9 @@ extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/05CH483.csv',
 extractor.allmethanogens_tocsv(filename='data/EmpiricalMethanogens/15CH483.csv', nATP=1.5, ESfrac=1.0, mol_CH4=3e-8, dbpath=dbpath)
 """
 
+
+# remove this docsting to plot the maintenance powers
+"""
 fig, ax = plt.subplots(figsize=(6,6))
 plot_powers(ax, 'PThrottle', 'Maintenance Power', files=('data/EmpiricalMethanogens/CH483.csv',), unitBM=False, theory=False, dbpath='allMtestc', lowhigh=['data/EmpiricalMethanogens/05CH483.csv', 'data/EmpiricalMethanogens/15CH483.csv'])
 
@@ -211,3 +213,4 @@ plt.tight_layout()
 # plt.subplots_adjust(hspace=0.0)
 plt.savefig('MP.pdf')
 # plt.show()
+"""
