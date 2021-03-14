@@ -22,6 +22,6 @@ Then to run some code:
 
 **Competition_Example** A guided example for using NutMEG to simulate competition between two fictional organisms: a methanogen and a sulfate reducer. Full guide available in [NutMEG's documentation](https://nutmeg-astrobiology.readthedocs.io).
 
-**Venus** Code for assessing the energetic availability in Venus' clouds.  Outputs of this were used in the publication: 'Biologically available Chemical Energy in the Temperate but Uninhabitable Venusian Cloud Layer: What do we Want to Know?' Cockell et al. 2021 Astrobiology
+**Venus** Code for assessing the energetic availability in Venus' clouds.  Outputs of this were used in the publication: 'Biologically available Chemical Energy in the Temperate but Uninhabitable Venusian Cloud Layer: What do we Want to Know?' Cockell et al. 2021 Astrobiology [DOI](https://doi.org/10.1089/ast.2020.2280)
 
-**TOM** Code for examining the growth and biosignature behaviour of methanogens.  Outputs of this were used in the publication: 'A bioenergetic model to predict habitability, biomass and biosignatures in extreme conditions and astrobiolgy' Higgins & Cockell (2020) J. R. Soc. Interface
+**TOM** Code for examining the growth and biosignature behaviour of methanogens.  Outputs of this were used in the publication: 'A bioenergetic model to predict habitability, biomass and biosignatures in extreme conditions and astrobiolgy' Higgins & Cockell (2020) J. R. Soc. Interface [DOI](https://doi.org/10.1098/rsif.2020.0588)
