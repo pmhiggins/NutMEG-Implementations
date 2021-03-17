@@ -449,12 +449,12 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
     contf = ax[1][1].pcolormesh(pHgrid, Tgrid, Bpass, vmin=0, vmax=5, shading='nearest', cmap=nomcols, edgecolor='slategray', linewidth=1)
 
     # fig.colorbar(contf)
-    ax[0][0].plot([0],[0], c=cmaplist[0], label='Not enough power uavailable in any configuration', linewidth=10)
-    ax[0][0].plot([0],[0], c=cmaplist[1], label='Enough power avaiable in the worst-case low-salt scenario', linewidth=10)
-    ax[0][0].plot([0],[0], c=cmaplist[2], label='Enough power avaiable in the nominal low-salt scenario', linewidth=10)
-    ax[0][0].plot([0],[0], c=cmaplist[3], label='Enough power avaiable in the nominal scenario', linewidth=10)
-    ax[0][0].plot([0],[0], c=cmaplist[4], label='Enough power avaiable in the nominal high-salt scenario', linewidth=10)
-    ax[0][0].plot([0],[0], c=cmaplist[5], label='Enough power avaiable in the best-case high-salt scenario', linewidth=10)
+    ax[0][0].plot([0],[0], c=cmaplist[0], label='Not enough power available in any configuration', linewidth=10)
+    ax[0][0].plot([0],[0], c=cmaplist[1], label='Enough power available in the worst-case low-salt scenario', linewidth=10)
+    ax[0][0].plot([0],[0], c=cmaplist[2], label='Enough power available in the nominal low-salt scenario', linewidth=10)
+    ax[0][0].plot([0],[0], c=cmaplist[3], label='Enough power available in the nominal scenario', linewidth=10)
+    ax[0][0].plot([0],[0], c=cmaplist[4], label='Enough power available in the nominal high-salt scenario', linewidth=10)
+    ax[0][0].plot([0],[0], c=cmaplist[5], label='Enough power available in the best-case high-salt scenario', linewidth=10)
 
     ax[0][0].set_title('To exceed maximum optimal maintenance \n (Higgins+ 2020)', fontsize=13)
     ax[0][1].set_title('To exceed empirical maintenance for anaerobes \n (Tijhuis+ 1993)', fontsize=13)
