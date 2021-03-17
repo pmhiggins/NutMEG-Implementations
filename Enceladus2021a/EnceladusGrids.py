@@ -2,26 +2,21 @@ import sys, os, ast, math, statistics
 sys.path.append(os.path.dirname(__file__)+'../../NutMEG')
 sys.path.append(os.path.dirname(__file__)+'../../NutMEG-Implementations/TOM')
 import matplotlib.pyplot as plt
-import matplotlib
 import numpy as np
-import pandas as pd
+from uncertainties import unumpy as unp
 
+# imports from NutMEG
 import NutMEG as es
 from NutMEG.reactor.saved_systems.Enceladus import Enceladus as Enc
 from NutMEG.culture.saved_organisms.TypicalOptimalMethanogen import TypicalOptimalMethanogen as TOM
 
+# other classes relevant to this project
 import theory_emp_match as tem
-
 import QuotientUncertainties as Qunc
-
 from EnergyCalculations import getPS
 from EnergyCalculations import getE_TOM
 
 
-import matplotlib.colors as clr
-# from PIL import Image
-
-from uncertainties import unumpy as unp
 
 es.db_helper.create_major_tables(replace=False)
 
@@ -35,6 +30,9 @@ default_nomdict = {'T':300,'pH':8.5, 'CH4':0., 'CO2':0., 'H2':0., 'nATP':1., 'k_
 
 
 def boolify_output(requests):
+    """
+    From a list of requests, build a dictionary for the outputs to present.
+    """
     output_options = ['Gibbs_Methanogenesis', 'PowerSupply', 'Quotient',
       'Composition', 'ATPGibbs', 'max_k', 'CO2Tiger']
     outputdict={}
@@ -47,7 +45,10 @@ def boolify_output(requests):
 
 def getPSfromSigmas(sigmas, sigmaorder=default_sigmaorder, dummyvals=False,
   salttype='nom',):
-
+    """
+    From the sigmas of the shape returned in getsimgas(), get a list of power
+    supplies for those sigma values.
+    """
     CO2s, H2s, CH4s, nATPs, k_corr, Ts, pHs = sigmas
 
     E = Enc(name='En', pH=pHs, CO2origin='HTHeatingSalts', T=Ts, workoutID=True)
@@ -55,9 +56,7 @@ def getPSfromSigmas(sigmas, sigmaorder=default_sigmaorder, dummyvals=False,
     E = Qunc.get_salty_Enc(E, salttype)
 
     E.composition['CO2(aq)'].activity = E.composition['CO2(aq)'].activity.n + (CO2s * E.composition['CO2(aq)'].activity.s)
-
     E.composition['H2(aq)'].activity = E.composition['H2(aq)'].activity.n + (H2s * E.composition['H2(aq)'].activity.s)
-
     E.composition['Methane(aq)'].activity = E.composition['Methane(aq)'].activity.n + (CH4s * E.composition['Methane(aq)'].activity.s)
 
     # H2O errors not supported yet
@@ -66,7 +65,16 @@ def getPSfromSigmas(sigmas, sigmaorder=default_sigmaorder, dummyvals=False,
     return getPS(E, nATPs, k_corr)
 
 
-def getsigmas(num, Encel=None, fixed={'T':None,'pH':None, 'CH4':None, 'CO2':None, 'H2':None, 'nATP':None, 'k_corr':None}, dummyvals=False, Tlims=(273,473), pHlims=(8,12)):
+def getsigmas(num, fixed={'T':None,'pH':None, 'CH4':None, 'CO2':None, 'H2':None, 'nATP':None, 'k_corr':None}, Tlims=(273,473), pHlims=(8,12), Encel=None, dummyvals=False):
+    """
+    get a uniform sample of the default_nomdict, unless some parameters are
+    fixed (passed as the keys of fixed). For activities, these are only relative:
+    e.g. between -1 and +1 of the uncertainty. For nATP these are the actual
+    values of nATP. For kRTP they are the change in  log-space.
+
+    Encel and dummyvals are from legacy and testing so are obsolete. But these
+    are left in for legacy code which used them.
+    """
         # for now Encel is a placeholder - I realised it doesn't work.
     Tmid = statistics.mean(Tlims)
     pHmid = statistics.mean(pHlims)
@@ -83,72 +91,43 @@ def getsigmas(num, Encel=None, fixed={'T':None,'pH':None, 'CH4':None, 'CO2':None
         if isinstance(val, float) or isinstance(val, int):
             nomdict[key] = val
             errdict[key] = 0
-    # if isinstance(fixed['T'], float) or isinstance(fixed['T'], int):
-    #     Tmid = fixed['T']
-    #     Terr = 0
-    # if isinstance(fixed['pH'], float) or isinstance(fixed['pH'], int):
-    #     pHmid = fixed['pH']
-    #     pHerr = 0
 
     ndim = len(default_sigmaorder)
 
-    if dummyvals:
-        # nominal = np.array([0, 0, 0, 1.0, Tmid, pHmid])
-        # lowbounds = np.array([-1, -1, -1, 0.5, Tmid - Terr, pHmid - pHerr])
-        # upbounds = np.array([1, 1, 1, 1.5, Tmid + Terr, pHmid + pHerr])
-        nominal = np.array([nomdict['CO2'], nomdict['H2'],
-          nomdict['CH4'],
-          nomdict['nATP'],
-          nomdict['k_corr'],
-          nomdict['T'],
-          nomdict['pH']])
-        lowbounds = np.array([nomdict['CO2'] - errdict['CO2'],
-          nomdict['H2'] - errdict['H2'],
-          nomdict['CH4'] - errdict['CH4'],
-          nomdict['nATP'] - errdict['nATP'],
-          nomdict['k_corr'] - errdict['k_corr'],
-          nomdict['T'] - errdict['T'],
-          nomdict['pH'] - errdict['pH']])
-        upbounds = np.array([nomdict['CO2'] + errdict['CO2'],
-          nomdict['H2'] + errdict['H2'],
-          nomdict['CH4'] + errdict['CH4'],
-          nomdict['nATP'] + errdict['nATP'],
-          nomdict['k_corr'] + errdict['k_corr'],
-          nomdict['T'] + errdict['T'],
-          nomdict['pH'] + errdict['pH']])
+    nominal = np.array([nomdict['CO2'], nomdict['H2'],
+      nomdict['CH4'],
+      nomdict['nATP'],
+      nomdict['k_corr'],
+      nomdict['T'],
+      nomdict['pH']])
+    lowbounds = np.array([nomdict['CO2'] - errdict['CO2'],
+      nomdict['H2'] - errdict['H2'],
+      nomdict['CH4'] - errdict['CH4'],
+      nomdict['nATP'] - errdict['nATP'],
+      nomdict['k_corr'] - errdict['k_corr'],
+      nomdict['T'] - errdict['T'],
+      nomdict['pH'] - errdict['pH']])
+    upbounds = np.array([nomdict['CO2'] + errdict['CO2'],
+      nomdict['H2'] + errdict['H2'],
+      nomdict['CH4'] + errdict['CH4'],
+      nomdict['nATP'] + errdict['nATP'],
+      nomdict['k_corr'] + errdict['k_corr'],
+      nomdict['T'] + errdict['T'],
+      nomdict['pH'] + errdict['pH']])
 
-        # nb for now, nothing gaussian all flat
-        return [nominal + (upbounds - lowbounds)*(-0.5+np.random.rand(ndim)) for i in range(num)]
+    # nb no gaussians, all flat
+    return [nominal + (upbounds - lowbounds)*(-0.5+np.random.rand(ndim)) for i in range(num)]
 
-    else:
-
-        nominal = np.array([Encel.composition['CO2(aq)'].activity.n,
-          Encel.composition['H2(aq)'].activity.n,
-          Encel.composition['Methane(aq)'].activity.n,
-          1,
-          nomdict['k_corr'],Tmid, pHmid])
-
-        lowbounds = np.array([Encel.composition['CO2(aq)'].activity.n - Encel.composition['CO2(aq)'].activity.s,
-          Encel.composition['H2(aq)'].activity.n - Encel.composition['H2(aq)'].activity.s,
-          Encel.composition['Methane(aq)'].activity.n - Encel.composition['Methane(aq)'].activity.s,
-          0.5,
-          nomdict['k_corr'] - errdict['k_corr'],
-          Tmid - Terr, pHmid - pHerr])
-        upbounds = np.array([Encel.composition['CO2(aq)'].activity.n + Encel.composition['CO2(aq)'].activity.s,
-          Encel.composition['H2(aq)'].activity.n + Encel.composition['H2(aq)'].activity.s,
-          Encel.composition['Methane(aq)'].activity.n + Encel.composition['Methane(aq)'].activity.s,
-          1.5,
-          nomdict['k_corr'] +errdict['k_corr'],
-          Tmid + Terr, pHmid + pHerr])
-
-          # nb for now, nothing gaussian all flat
-        return [nominal + (upbounds - lowbounds)*(-0.5+np.random.rand(ndim)) for i in range(num)]
 
 
 def getEncEnergetics(ocean_pH=8., T=273.15, nATP=1.0, k_corr=0.,
-    CO2origin='pH', # change to HTHeating later
-    output=gEE_default_output,
-    quotienttype='salty_endmember'):
+  CO2origin='pH', # change to HTHeating later
+  output=gEE_default_output,
+  quotienttype='salty_endmember'):
+    """
+    Get the requested parameters in output at the selected parameters of
+    ocean_pH, T, nATP, and k_corr.
+    """
 
     outputbools = boolify_output(output)
     outputdict = {}
@@ -206,7 +185,10 @@ def getEncEnergetics(ocean_pH=8., T=273.15, nATP=1.0, k_corr=0.,
 
 def getMesh(Trange, pHrange, params=['Gibbs_Methanogenesis'],
   nATP=1.0, k_corr=0.0, CO2origin='pH', quotienttype='salty_endmember'):
-
+    """
+    Get a dictionary of meshgrids, including the temperatures, ocean pH values,
+    and entries in params.
+    """
     Meshes = {p:[] for p in params}
     for p in params:
         op = np.ndarray((len(Trange), len(pHrange)))
@@ -234,19 +216,28 @@ def getMesh(Trange, pHrange, params=['Gibbs_Methanogenesis'],
 
     return Meshes
 
+
+######### for maintenance estimates ###########
+
 def get_maintenances(T,pH, E=None, TOM=None, nATP=1.0):
+    """
+    Get the four maintenance updates at T and pH.
+
+    This may take time to run the first time, it will be quicker if you have
+    the database set up in the TOM directory. You can also contact me for a
+    copy of the full database.
+    """
     PT=1
     if T <375:
         if nATP == 1.0:
-            PT = tem.MaintenanceRange_nATPs(Trange=[int(T)], mCH4=3e-8, Tlst=False, fraction=False, Perform=False, dbpath='../../NutMEG-Implementations/TOM/allMtestc')[0][0]
+            PT = tem.MaintenanceRange_nATPs(Trange=[int(T)], mCH4=3e-8, Tlst=False, fraction=False, Perform=False, dbpath='../TOM/allMtestc')[0][0]
         elif nATP == 0.5 or nATP==0.25:
-            PT = tem.MaintenanceRange_nATPs(Trange=[int(T)], mCH4=3e-8, Tlst=False, fraction=False, Perform=False, dbpath='../../NutMEG-Implementations/TOM/allMtestc')[1][0]
+            PT = tem.MaintenanceRange_nATPs(Trange=[int(T)], mCH4=3e-8, Tlst=False, fraction=False, Perform=False, dbpath='../TOM/allMtestc')[1][0]
             if PT <1e-20:
                 #correct up for the v low estimates at near 0C
                 PT=1e-12
         elif nATP > 1.5:
             PT = tem.MaintenanceRange_nATPs(Trange=[int(T)], mCH4=3e-8, Tlst=False, fraction=False, Perform=False, dbpath='../../NutMEG-Implementations/TOM/allMtestc')[2][0]
-
 
     # make a TOM
     if E==None or TOM==None:
@@ -262,6 +253,7 @@ def get_maintenances(T,pH, E=None, TOM=None, nATP=1.0):
     return PT, Ti, L2
 
 def maintenancemesh(Trange, pHrange, nATP=1.0):
+    """Get a meshgrid of maintenance powers."""
 
     E = Enc('EncT')
     TOM = getE_TOM(E)

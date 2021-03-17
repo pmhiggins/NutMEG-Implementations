@@ -1,4 +1,4 @@
-""" for making colormaps """
+""" for making colormaps, specifically ones which fade to transparency """
 
 import matplotlib.colors as clr
 

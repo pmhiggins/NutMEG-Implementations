@@ -54,7 +54,6 @@ def plot_sigmas(sample):
 
 """ PH SAMPLING METHODS """
 
-######### just change getPSfromSigmas stuff to include salttype. Same with filenames. Easy.
 
 def samplepH(size, Temp=298, pHrange=[7,12], salttype='nom',
   fixupdate={}, fn_preamble=''):

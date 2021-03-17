@@ -4,6 +4,7 @@ sys.path.append(os.path.dirname(__file__)+'../../NutMEG-Implementations/TOM')
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import matplotlib.colors as clr
 import numpy as np
 import pandas as pd
 from scipy import interpolate
@@ -11,9 +12,7 @@ from scipy import interpolate
 import NutMEG as es
 from NutMEG.reactor.saved_systems.Enceladus import Enceladus
 
-import matplotlib.colors as clr
 import theory_emp_match as tem
-
 import EnceladusGrids
 from EnergyCalculations import getE_TOM
 # import EnceladusSampler_2 as ES2
@@ -49,8 +48,6 @@ def add_pH_lines(ax, color='dimgray',
         df2=pd.read_csv('E21data/Speciation/highsalt/pH'+pH+'.csv', sep=',')
         df3=pd.read_csv('E21data/Speciation/lowsalt/pH'+pH+'.csv', sep=',')
         ax.plot(df['pH'], Tfloats, c=color, linestyle='dashed', linewidth=3)
-        # ax.plot(df2['pH'], Tfloats, '-1', c=color)
-        # ax.plot(df3['pH'], Tfloats, '-1', c=color)
         if unc:
             ax.fill_betweenx(Tfloats, df2['pH'], df3['pH'], facecolor='y', alpha=0.3)
     # for the label
@@ -60,7 +57,6 @@ def add_pH_lines(ax, color='dimgray',
 def add_pH_boxes(ax, CDAINMS=True, postberg=True):
     pHnames = ['7.0','7.5','8.0','8.5','9.0','9.5','10.0','10.5','11.0','11.5','12.0']
     Tfloats = np.linspace(273.15, 473.15, num=21)
-    # pHlist = np.ndarray((len(pHfloats), len(Tfloats)))
     gleinlists=[]
     postlists=[]
     if postberg:
@@ -82,10 +78,10 @@ def add_maintenance_lines(ax, colors=['tab:orange', 'k','y','c']):
     ax.fill_between(T1, np.log10(PT[1]), np.log10(PT[2]), color=colors[0], alpha=0.6)
 
     T2 = range(273, 400)
-    # make a TOM
+    # make a TOM and an Enceladus
     _Enc = Enceladus('EncT')
     TOM = getE_TOM(_Enc)
-    # make an Enceladus
+
     TE = es.applications.theory_estimates(TOM, _Enc)
     Ti, L10, L2 = [],[],[]
     for t in T2:
@@ -107,9 +103,6 @@ def add_maintenance_labels(ax, colors=['tab:orange', 'k','g','c']):
     ax.fill_between([0,0], [1,1],[1,1], color=colors[2], alpha=0.6, label='Minimal Maintenance Power (Lever et al. 2015)')
     ax.fill_between([0,0], [1,1],[1,1], color=colors[3], alpha=0.6, label='Min. subsurface power supplies (Bradley et al. 2020)')
     return ax
-
-
-
 
 
 def add_pH_maintenance_lines(ax, T, pHrange=[7,12], colors=['tab:orange', 'k','g','c']):
@@ -135,6 +128,7 @@ def add_pH_maintenance_lines(ax, T, pHrange=[7,12], colors=['tab:orange', 'k','g
     ax.fill_between(pHrange, [-18, -18], [-21, -21], color=colors[3], alpha=0.4)
     return ax
 
+
 def energycolormap():
     # top = plt.cm.get_cmap('winter_r', 128)
     cyan_to_b = {'red':[(0,0,0), (1,0,0)],
@@ -148,7 +142,7 @@ def energycolormap():
       'alpha':[(0,1,1), (1,0,0)]}
 
     top = clr.LinearSegmentedColormap('ctb', cyan_to_b)
-    middle = clr.LinearSegmentedColormap('bta', blue_to_a)#plt.cm.get_cmap('ocean', 128)
+    middle = clr.LinearSegmentedColormap('bta', blue_to_a)
     bottom = plt.cm.get_cmap('Reds', 64)
 
     newcolors = np.vstack((top(np.linspace(0, 1, 128)),
@@ -156,9 +150,8 @@ def energycolormap():
                        bottom(np.linspace(0, 1, 128))))
     newcmp = clr.ListedColormap(newcolors, name='energycol')
     return newcmp
-# fig, ax = plt.subplots(figsize=(8,8), ncols=1, nrows=1)
-# add_pH_lines(ax)
-# plt.show()
+
+
 
 ###############   Methanogenesis Energy ##############
 
@@ -227,13 +220,11 @@ def MGEcomparison_plot():
     fig.colorbar(contf, label='Free Energy of methanogenesis [J/mol]', orientation='vertical', pad=0.08)
     plt.show()
 
-# MGEcomparison_plot()
-
-# make_MGEContourPlot(CO2origin='HTHeating20', save='energyplottest2.pdf', show=False, pHax=True, pHbars=True)
 
 
 
-###############   ATP Energy ##############
+###############   ATP Energy  ##############
+
 
 def ATPEnergyContourPlot(ax, CO2origin='pH',
   pHrange=np.linspace(7,14, num=11), Trange = np.linspace(273,473, num=11)):
@@ -252,9 +243,6 @@ def ATPEnergyContourPlot(ax, CO2origin='pH',
     cont = ax.contour(XX, YY, ZZ[0], levels=5, colors=['k'], vmin=55000, vmax=68000)
     ax.clabel(cont, inline=1, fontsize=12, fmt='%d') # add label
 
-    # ax.contour(XX, YY, ZZ[1], levels=5, linestyles='dotted', colors=['slategrey'], vmin=-150000, vmax=150000)
-    # ax.contour(XX, YY, ZZ[2], levels=5, linestyles='dashed', colors=['slategrey'], vmin=-150000, vmax=150000)
-
     return ax, contf
 
 def make_ATPContourPlot(CO2origin='pH', save='ConservableEnergyplot.pdf', show=False):
@@ -271,11 +259,11 @@ def make_ATPContourPlot(CO2origin='pH', save='ConservableEnergyplot.pdf', show=F
     if show:
         plt.show()
 
-# make_ATPContourPlot(CO2origin='pH', save=None, show=True)
 
 
 
 ############# POWER SUPPLY ################
+
 
 def PSContourPlot(ax, CO2origin='pH',
   pHrange=np.linspace(7,14, num=11), Trange = np.linspace(273,473, num=21),
@@ -300,21 +288,6 @@ def PSContourPlot(ax, CO2origin='pH',
     else:
         contf = ax.contourf(XX, YY, np.log10(ZZ[maincont]), levels=np.arange(-25,-4,1), cmap=cmap, vmin=-25, vmax=-5, extend='both')
 
-    # inter0 = interpolate.interp2d(pHrange, Trange, np.log10(ZZ[0]),kind='cubic')
-    # inter1 = interpolate.interp2d(pHrange, Trange, np.log10(ZZ[1]),kind='cubic')
-    # inter2 = interpolate.interp2d(pHrange, Trange, np.log10(ZZ[2]),kind='cubic')
-
-    # x2 = np.linspace(7,12,num=100)
-    # y2 = np.linspace(273,473,num=100)
-    # XX2,  YY2 = np.meshgrid(x2, y2)
-    # print(XX2, YY2, inter0(x2,y2))
-    # # np.log10(ZZ[0])
-    # cont = ax.contour(XX2, YY2, inter0(x2,y2), levels=contourlevels, cmap='YlOrRd_r', vmin=-25, vmax=-5)
-    # ax.clabel(cont, inline=1, fontsize=12, fmt='%d') # add label
-    # # colors was ['slategrey']
-    # ax.contour(XX2, YY2, inter1(x2,y2), levels=contourlevels, linestyles='dashed', cmap='YlOrRd_r', vmin=-25, vmax=-5)
-    # ax.contour(XX2, YY2, inter2(x2,y2), levels=contourlevels, linestyles='dashed', cmap='YlOrRd_r', vmin=-25, vmax=-5)
-
     return ax, contf
 
 
@@ -335,15 +308,13 @@ def make_PSContourPlot(CO2origin='pH', save='Powersupply.pdf', show=False, mesh=
           horizontalalignment='right',
           verticalalignment='bottom', color='tab:orange',
           family='serif', fontsize=11, fontweight='extra bold', variant='small-caps')
-    # ax.legend(bbox_to_anchor=(0., 1.15, 1., .102), loc=3,
-    #        ncol=1, mode="expand", borderaxespad=0.)
+
     plt.tight_layout()
     if save != None:
         plt.savefig(save)
     if show:
         plt.show()
 
-# make_PSContourPlot(CO2origin='HTHeating20', save='powerplottest.pdf', show=False, mesh=True)
 
 
 def PScomparison_plot():
@@ -354,10 +325,9 @@ def PScomparison_plot():
     ax[1], contf2 = PSContourPlot(ax[1],
       pHrange=np.linspace(7,12, num=11), CO2origin='HTHeating')
 
-    # fig.colorbar(contf, label='log10 (Power Supply [W/cell])', orientation='vertical', pad=0.08)
     plt.show()
 
-# PScomparison_plot()
+
 
 def PSunc_plot(CO2origin='HTHeating20', save='Powersupply_comp.pdf', show=False, mesh=False, Tline=True, nATP=1.0):
 
@@ -386,10 +356,6 @@ def PSunc_plot(CO2origin='HTHeating20', save='Powersupply_comp.pdf', show=False,
                   horizontalalignment='right',
                   verticalalignment='bottom', color='tab:orange',
                   family='serif', fontsize=11, fontweight='extra bold', variant='small-caps')
-                # txt.set_weight('bold')
-        # ax.legend(bbox_to_anchor=(0., 1.15, 1., .102), loc=3,
-        #        ncol=1, mode="expand", borderaxespad=0.)
-        # plt.tight_layout()
         if save != None:
             plt.savefig(save)
         if show:
@@ -397,9 +363,7 @@ def PSunc_plot(CO2origin='HTHeating20', save='Powersupply_comp.pdf', show=False,
 
 
 def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspace(7,12, num=11), nATP=1.0):
-    #
-    # nomcols = [mpl.cm.get_cmap('autumn')(i*0.15) for i in range(0,5)]
-    # nomcols.insert(0,'w')
+
     mpl.rcParams['xtick.labelsize'] = 13
     mpl.rcParams['ytick.labelsize'] = 13
     mpl.rcParams['font.size'] = 13
@@ -408,8 +372,6 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
     cmaplist = [nomcols(i) for i in range(nomcols.N)]
     # force the first color entry to be grey
     cmaplist[0] = (.95, .95, .95, 1.0)
-    # cmaplist.insert(0, 'w')# (.95, .95, .95, 1.0))
-
 
     # create the new map
     nomcols = mpl.colors.LinearSegmentedColormap.from_list(
@@ -421,6 +383,9 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
         fn_preamble='E21data/PSgrids/'
     else:
         fn_preamble='E21data/PSgrids/'+str(nATP)+'_'
+
+
+    # for generating and saving
 
     # noms = EnceladusGrids.getMesh(Trange, pHrange, params=['PowerSupply'], nATP=nATP, quotienttype='salty_endmember')
     # np.save(fn_preamble+'noms.npy', noms['PowerSupply'][0])
@@ -446,8 +411,6 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
     highest = np.load(fn_preamble+'highest.npy')
     nomlow = np.load(fn_preamble+'nomlow.npy')
     lowest = np.load(fn_preamble+'lowest.npy')
-
-
 
 
     # get the maintenance dictionaries
@@ -478,8 +441,6 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
 
             xindex += 1
         yindex += 1
-                # print(mppass[yindex][xindex])
-        # print(mppass)
 
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(10,11))
     contf = ax[0][0].pcolormesh(pHgrid, Tgrid, HCpass, vmin=0, vmax=5, shading='nearest', cmap=nomcols, edgecolor='slategray', linewidth=1)
