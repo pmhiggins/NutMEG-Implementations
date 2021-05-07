@@ -1,9 +1,11 @@
 import sys, os, ast, math
-sys.path.append(os.path.dirname(__file__)+'../../NutMEG')
+sys.path.append(os.path.dirname(__file__)+'../../../NutMEG')
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import pandas as pd
+
+import NutMEG as nm
 
 mpl.rcParams['contour.negative_linestyle'] = 'solid'
 mpl.rcParams['font.family'] = 'sans-serif'
@@ -30,6 +32,9 @@ fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(14,10))
 
 nomcols = plt.get_cmap('Set2', 6)
 cmaplist = [nomcols(i) for i in range(nomcols.N)]
+cmaplist[4] = 'chocolate'
+cmaplist[3] = 'yellowgreen'
+
 
 for pH, pH5, c in zip(pHnames, pHnames5, cmaplist):
     # df=pd.read_csv('../HTHeatingdata/pH'+pH+'.csv', sep=',')
@@ -66,6 +71,31 @@ for pH, pH5, c in zip(pHnames, pHnames5, cmaplist):
 
   # for the label
   # ax.plot([0,0], [0,0], c=color, linestyle='dashed', label='pH when warmed from 273.15 K')
+
+R = nm.environment() # 1bar, 298 K
+
+H2O = nm.reaction.reagent('H2O(l)', R, phase='l')
+H = nm.reaction.reagent('H+', R, phase='aq')
+OH = nm.reaction.reagent('OH-', R, phase='aq')
+
+rxn = nm.reaction.reaction({H2O:1}, {H:1, OH:1}, R)
+
+Ts = np.linspace(273,500, num=(500-273)*2)
+pHs = []
+for T in Ts:
+ rxn.env.T = T
+ rxn.rto_current_env()
+ pHs.append(-math.log10(math.sqrt(math.exp(rxn.lnK))))
+
+H2Oc = 'rebeccapurple'
+ax[1][0].plot(Ts, pHs, c=H2Oc, linewidth=2, linestyle='dashed')
+ax[1][0].text(470, 6.1, 'pH of pure water', horizontalalignment='right',
+verticalalignment='center', fontsize=12, color=H2Oc)
+ax[1][1].plot(Ts, pHs, c=H2Oc, linewidth=2, linestyle='dashed')
+ax[1][1].text(470, 6.1, 'pH of pure water', horizontalalignment='right',
+verticalalignment='center', fontsize=12, color=H2Oc)
+
+
 for i, aa in enumerate(ax):
     for j, a in enumerate(aa):
         a.set_xlabel('Temperature [K]')
@@ -76,7 +106,7 @@ for i, aa in enumerate(ax):
             a.set_ylim(1e-10,1e-1)
         if i == 1:
             a.set_ylabel('pH')
-            a.set_ylim(6,12.5)
+            a.set_ylim(5.5,12.5)
 
 plt.tight_layout()
 plt.savefig('CO2act.pdf')

@@ -36,7 +36,7 @@ mpl.rcParams['font.size'] = 14
 
 ############## ADDING LINES ################
 
-def add_pH_lines(ax, color='dimgray',
+def add_pH_lines(ax, color='dimgray', ls='dashed',
   pHnames = ['7.0','7.5','8.0','8.5','9.0','9.5','10.0','10.5','11.0','11.5','12.0'],
   unc=False):
 
@@ -47,11 +47,11 @@ def add_pH_lines(ax, color='dimgray',
         df=pd.read_csv('E21data/Speciation/nominalCO2/pH'+pH+'.csv', sep=',')
         df2=pd.read_csv('E21data/Speciation/highsalt/pH'+pH+'.csv', sep=',')
         df3=pd.read_csv('E21data/Speciation/lowsalt/pH'+pH+'.csv', sep=',')
-        ax.plot(df['pH'], Tfloats, c=color, linestyle='dashed', linewidth=3)
+        ax.plot(df['pH'], Tfloats, c=color, linestyle=ls, linewidth=3)
         if unc:
             ax.fill_betweenx(Tfloats, df2['pH'], df3['pH'], facecolor='y', alpha=0.3)
     # for the label
-    ax.plot([0,0], [0,0], c=color, linestyle='dashed', linewidth=3, label='pH when warmed from 273.15 K')
+    ax.plot([0,0], [0,0], c=color, linestyle=ls, linewidth=3, label='pH when warmed from 273.15 K')
     return ax
 
 def add_pH_boxes(ax, CDAINMS=True, postberg=True):
@@ -63,7 +63,7 @@ def add_pH_boxes(ax, CDAINMS=True, postberg=True):
         for pH in ['8.5', '9.0']:
             df=pd.read_csv('E21data/Speciation/nominalCO2/pH'+pH+'.csv', sep=',')
             postlists.append(df['pH'])
-        ax.fill_betweenx(Tfloats, postlists[0], postlists[1], color='none', edgecolor='tab:brown', hatch='X', linewidth=4, label='pH range Postberg 2009, Glein 2020')
+        ax.fill_betweenx(Tfloats, postlists[0], postlists[1], color='none', edgecolor='tab:brown', hatch='X', linewidth=4, label='Expected pH range (Postberg+ 2009, Glein & Waite 2020)')
     if CDAINMS:
         for pH in ['9.5', '11.0']:
             pd.read_csv('E21data/Speciation/nominalCO2/pH'+pH+'.csv', sep=',')
@@ -167,19 +167,19 @@ def MethanogenesisEnergyContourPlot(ax, CO2origin='pH',
     YY = Meshes['T']
     ZZ = Meshes[plotkey]
 
-    levels = [-150000, -75000, 0, 75000]
+    levels = [-150, -75, 0, 75]
 
     # contf = ax.contourf(XX, YY, ZZ[maincont], levels=np.arange(-150000, 150000, 3000), cmap=energycolormap(), vmin=-150000, vmax=150000, extend='both')
-    contf = ax.contourf(XX, YY, ZZ[maincont], levels=np.arange(-160000, 80000, 2500), cmap=energycolormap(), vmin=-160000, vmax=80000, extend='both')
+    contf = ax.contourf(XX, YY, ZZ[maincont]/1000, levels=np.arange(-160, 80, 2.5), cmap=energycolormap(), vmin=-160, vmax=80, extend='both')
 
 
     contourcolor='k'#'dimgray'
 
-    cont = ax.contour(XX, YY, ZZ[0], levels=levels, colors=[contourcolor], vmin=-150000, vmax=80000, linewidths=2.5)
+    cont = ax.contour(XX, YY, ZZ[0]/1000, levels=levels, colors=[contourcolor], vmin=-150000, vmax=80000, linewidths=2.5)
     ax.clabel(cont, inline=1, fontsize=16, fmt='%d') # add label
 
-    ax.contour(XX, YY, ZZ[1], levels=levels, linestyles='dotted', colors=[contourcolor], vmin=-150000, vmax=80000, linewidths=2.5)
-    ax.contour(XX, YY, ZZ[2], levels=levels, linestyles='dotted', colors=[contourcolor], vmin=-150000, vmax=80000, linewidths=2.5)
+    ax.contour(XX, YY, ZZ[1]/1000, levels=levels, linestyles='dotted', colors=[contourcolor], vmin=-150, vmax=80, linewidths=2.5)
+    ax.contour(XX, YY, ZZ[2]/1000, levels=levels, linestyles='dotted', colors=[contourcolor], vmin=-150, vmax=80, linewidths=2.5)
 
     ax.plot([0,0], [0,0], c= contourcolor, label='Uncertainty bounds on free energy contour', linestyle='dotted', linewidth=2.5)
 
@@ -191,19 +191,30 @@ def make_MGEContourPlot(CO2origin='pH', save='Energyplot.pdf', show=False, pHax=
     fig, ax = plt.subplots(figsize=(8,8))
     ax, contf = MethanogenesisEnergyContourPlot(ax, CO2origin=CO2origin, pHrange=np.linspace(7,12, num=11), quotienttype=quotienttype)
 
-    fig.colorbar(contf, label='Free Energy of methanogenesis [J/mol]', orientation='horizontal', pad=0.12)
+    fig.colorbar(contf, label='Free Energy of methanogenesis [kJ/mol]', orientation='horizontal', pad=0.12)
     if pHax:
         ax = add_pH_lines(ax, pHnames = ['7.0','8.0','9.0','10.0','11.0','12.0'])
     if pHbars:
         add_pH_boxes(ax, CDAINMS=False)
     ax.set_xlim(7,12)
-    ax.set_xlabel('Wider ocean pH (e.g. at 273.15 K)')
+    ax.set_xlabel('Bulk ocean pH (e.g. at 273 K)')
     ax.set_ylabel('Temperature [K]')
     ax.set_ylim(273.15,473)
-    ax.legend(bbox_to_anchor=(0., 1.05, 1., .102), loc=3,
+    ax.annotate("", xy=(9.4, 390), xytext=(9.1, 375), arrowprops=dict(headwidth=5, headlength=5, width=0.1, fc='k'))
+    ax.annotate("", xy=(8.5, 345), xytext=(8.95, 367), arrowprops=dict(headwidth=5, headlength=5, width=0.1, fc='k'))
+
+    ax.annotate("", xy=(11, 400), xytext=(10.86, 395), arrowprops=dict(headwidth=5, headlength=5, width=0.1, fc='k'))
+    ax.annotate("", xy=(10.4, 380), xytext=(10.7, 390), arrowprops=dict(headwidth=5, headlength=5, width=0.1, fc='k'))
+
+    # ax.arrow(9.1, 375, 0.4, 15, head_width=0.1, head_length=10, fc='k', ec='k')
+    # ax.arrow(9.0, 370, -0.4, -20, head_width=0.1, head_length=10, fc='k', ec='k')
+
+    ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
            ncol=1, mode="expand", borderaxespad=0.)
-    plt.tight_layout()
+    # plt.tight_layout()
+    fig.subplots_adjust(left=0.09, bottom=0,right=0.98, top=0.87)
     if save != None:
+        # plt.show()
         plt.savefig(save)
     if show:
         # plt.tight_layout()
@@ -299,7 +310,7 @@ def make_PSContourPlot(CO2origin='pH', save='Powersupply.pdf', show=False, mesh=
     fig.colorbar(contf, label='log10 (Power Supply [W/cell])', orientation='horizontal', pad=0.08, extend='both')
 
     ax.set_xlim(6.75,12.25)
-    ax.set_xlabel('Wider ocean pH (e.g. at 273.15 K)')
+    ax.set_xlabel('Bulk ocean pH (e.g. at 273 K)')
     ax.set_ylabel('Temperature [K]')
     ax.set_ylim(268.15,478)
     if Tline:
@@ -309,7 +320,11 @@ def make_PSContourPlot(CO2origin='pH', save='Powersupply.pdf', show=False, mesh=
           verticalalignment='bottom', color='tab:orange',
           family='serif', fontsize=11, fontweight='extra bold', variant='small-caps')
 
-    plt.tight_layout()
+    ax = add_pH_lines(ax, color=(0,0,0,0.6), ls='dotted')
+    ax.legend(bbox_to_anchor=(0., 1.02, 1., .05), loc=3,
+           ncol=1, mode="expand", borderaxespad=0.)
+
+    fig.subplots_adjust(left=0.086, bottom=0, right=0.99, top=0.94)
     if save != None:
         plt.savefig(save)
     if show:
@@ -345,7 +360,7 @@ def PSunc_plot(CO2origin='HTHeating20', save='Powersupply_comp.pdf', show=False,
             # ax.set_xlim(7,12)
             ax.set_xlim(6.75,12.25)
 
-            ax.set_xlabel('Wider ocean pH (e.g. at 273.15 K)')
+            ax.set_xlabel('Bulk ocean pH (e.g. at 273 K)')
             ax.set_ylabel('Temperature [K]')
             # ax.set_ylim(273.15,473)
             ax.set_ylim(268.15,478)
@@ -466,7 +481,7 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
         for a in aa:
             a.set_xlim(6.75, 12.25)
             a.set_ylim(268, 408)
-            a.set_xlabel('Wider ocean pH')
+            a.set_xlabel('Bulk ocean pH (e.g. pH at 273 K)')
             a.set_ylabel('Temperature [K]')
 
     plt.subplots_adjust(wspace=0.2, hspace=0.33, left=0.08, right=0.98, bottom=0.05, top=0.78)
@@ -477,4 +492,4 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
     if nATP == 1.0:
         plt.savefig('figs/habgrid.pdf')
     else:
-        plt.savefig('figs/habgrid_'+str(nATP)+'.pdf')
+        plt.savefig('suppfigs/habgrid_'+str(nATP)+'.pdf')

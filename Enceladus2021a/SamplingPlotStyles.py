@@ -184,7 +184,7 @@ def nominal2x3(Ts=[275, 300, 325], pHs=[8,9,10], save='figs/nominal2x3.pdf', sho
         ax[i][0] = nominalline_pH(ax[i][0], T, nomcols[3], ls='dashed', salttype='low', fixupdate={'nATP':nATPchoice}, fn_preamble='nATP_'+str(nATPchoice))
         ax[i][0] = nominalline_pH(ax[i][0], T, nomcols[4], ls='dotted', salttype='low', fixupdate={'H2':-1., 'CH4':1., 'nATP':nATPchoice, 'k_corr':-1.0}, fn_preamble='mined_nATP'+str(nATPchoice))
 
-        ax[i][0].set_xlabel('wider ocean pH')
+        ax[i][0].set_xlabel('Bulk ocean pH (e.g. pH at 273 K)')
         ax[i][0].set_ylabel('Power [W/cell]')
         if maintenance:
             EPS.add_pH_maintenance_lines(ax[i][0], T, colors=maincols)
@@ -192,8 +192,7 @@ def nominal2x3(Ts=[275, 300, 325], pHs=[8,9,10], save='figs/nominal2x3.pdf', sho
 
     for j, pH in enumerate(pHs):
 
-        # ax[j][1].set_title('wider ocean pH = '+str(pH), loc='left')
-        ax[j][1].text(275, -8, 'wider ocean pH = '+str(pH), fontsize=14)
+        ax[j][1].text(275, -8, 'Bulk ocean pH = '+str(pH), fontsize=14)
         ax[j][1] = nominalline_T(ax[j][1], pH, nomcols[0], ls='dotted', salttype='high', fixupdate={'H2':1., 'CH4':-1., 'nATP':nATPchoice, 'k_corr':1.0}, fn_preamble='maxed_nATP'+str(nATPchoice))
         ax[j][1] = nominalline_T(ax[j][1], pH, nomcols[1], ls='dashed', salttype='high', fixupdate={'nATP':nATPchoice}, fn_preamble='nATP_'+str(nATPchoice))
         ax[j][1] = nominalline_T(ax[j][1], pH, nomcols[2], fixupdate={'nATP':nATPchoice}, fn_preamble='nATP_'+str(nATPchoice))

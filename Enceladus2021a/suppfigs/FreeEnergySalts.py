@@ -39,7 +39,7 @@ axs[1][1].set_title('High salt level')
 
 
 cbaxes = fig.add_axes([0.58, 0.6, 0.3975, 0.05])
-fig.colorbar(contf, cax=cbaxes, ticks=[-150000, -75000, 0, 75000], label='Free Energy of methanogenesis [J/mol]', orientation='horizontal', extend='both')
+fig.colorbar(contf, cax=cbaxes, ticks=[-160,-120,-80,-40,0,40,80], label='Free Energy of methanogenesis [kJ/mol]', orientation='horizontal', extend='both')
 
 
 axs[0][0].legend(bbox_to_anchor=(1.2, 0.8, 1.0, .102), loc=3,
@@ -50,7 +50,7 @@ for ax in axs:
         a.set_xlim(7,12)
         a.set_ylim(273.15,473)
         a.set_ylabel('Temperature [K]')
-        a.set_xlabel('Wider ocean pH')
+        a.set_xlabel('Bulk ocean pH')
 
 plt.savefig('freeenergysalts.pdf')
 

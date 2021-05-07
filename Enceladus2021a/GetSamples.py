@@ -55,15 +55,15 @@ def varianceexample(samplesize):
     ax[2][1], hb, hr = SPS.all_varianceplot_T(ax[2][1], samplesize, 9, salttype='low')
     ax[2][2], hb, hr = SPS.all_varianceplot_T(ax[2][2], samplesize, 10, salttype='low')
 
-    ax[0][0].annotate('Wider ocean pH: 8', xy=(0.5, 1.1), xytext=(0.5, 1.2), xycoords='axes fraction',
+    ax[0][0].annotate('Bulk ocean pH: 8', xy=(0.5, 1.1), xytext=(0.5, 1.2), xycoords='axes fraction',
             fontsize=12, ha='center', va='center', rotation='horizontal',
             arrowprops=dict(arrowstyle='-[, widthB=5.0, lengthB=1.0', lw=2))
 
-    ax[0][1].annotate('Wider ocean pH: 9', xy=(0.5, 1.1), xytext=(0.5, 1.2), xycoords='axes fraction',
+    ax[0][1].annotate('Bulk ocean pH: 9', xy=(0.5, 1.1), xytext=(0.5, 1.2), xycoords='axes fraction',
             fontsize=12, ha='center', va='center', rotation='horizontal',
             arrowprops=dict(arrowstyle='-[, widthB=5.0, lengthB=1.0', lw=2))
 
-    ax[0][2].annotate('Wider ocean pH: 10', xy=(0.5, 1.1), xytext=(0.5, 1.2), xycoords='axes fraction',
+    ax[0][2].annotate('Bulk ocean pH: 10', xy=(0.5, 1.1), xytext=(0.5, 1.2), xycoords='axes fraction',
             fontsize=12, ha='center', va='center', rotation='horizontal',
             arrowprops=dict(arrowstyle='-[, widthB=5.0, lengthB=1.0', lw=2))
 
@@ -104,7 +104,7 @@ def varianceexample(samplesize):
     # ax[1][0] = all_varianceplot_pH(ax[1][0], 100, 300)
     # ax[1][1] = all_varianceplot_pH(ax[1][1], 100, 300, salttype='high')
     fig.subplots_adjust(bottom=0.15, left=0.08, right=0.92, top=0.92, wspace=0.05, hspace=0.05)
-    plt.savefig('allvtest.pdf')
+    plt.savefig('figs/total_variance.pdf')
     # plt.show()
 
 def varianceexmaple_extend(startfrom, totsize, stepsize):
