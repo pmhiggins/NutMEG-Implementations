@@ -23,34 +23,36 @@ mpl.rcParams['font.size'] = 14
 fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(5,8))
 
 Ts = range(273,473) #range(273,373)
-GM10, GATP10 = [],[]
-GM80, GATP80 = [],[]
+GM1, GATP1 = [],[]
+GM100, GATP100 = [],[]
 
 for T in range(273,473):
     E = Enc('Enceladus', T=T, depth=0)
+    E.env.P = 1e5
     TOMobj = TOM(E, paramchange={'Basal':1e-15, 'Tdef':'None'})
 
-    GM10.append(TOMobj.respiration.net_pathway.std_molar_gibbs)
-    GATP10.append(TOMobj.respiration.ATP_production.std_molar_gibbs)
+    GM1.append(TOMobj.respiration.net_pathway.std_molar_gibbs/1000)
+    GATP1.append(TOMobj.respiration.ATP_production.std_molar_gibbs/1000)
 
     E = Enc('Enceladus', T=T, depth=10)
+    E.env.P = 1e7
     TOMobj = TOM(E, paramchange={'Basal':1e-15, 'Tdef':'None'})
 
-    GM80.append(TOMobj.respiration.net_pathway.std_molar_gibbs)
-    GATP80.append(TOMobj.respiration.ATP_production.std_molar_gibbs)
+    GM100.append(TOMobj.respiration.net_pathway.std_molar_gibbs/1000)
+    GATP100.append(TOMobj.respiration.ATP_production.std_molar_gibbs/1000)
 
 axs[0].set_title('Methanogenesis')
-axs[0].plot(Ts, GM10, color='b', label='10 bar')
-axs[0].plot(Ts, GM80, color = 'b', linestyle='dashed', label='80 bar')
+axs[0].plot(Ts, GM1, color='b', label='1 bar')
+axs[0].plot(Ts, GM100, color = 'b', linestyle='dashed', label='100 bar')
 
 axs[1].set_title('ATP Production')
-axs[1].plot(Ts, GATP10, color='b', label='10 bar')
-axs[1].plot(Ts, GATP80, color = 'b', linestyle='dashed', label='80 bar')
+axs[1].plot(Ts, GATP1, color='b', label='1 bar')
+axs[1].plot(Ts, GATP100, color = 'b', linestyle='dashed', label='100 bar')
 
 for ax in axs:
     ax.set_xlabel('Temperature [K]')
     ax.set_xlim(273,473)
-    ax.set_ylabel('Standard free energy [J/mol]')
+    ax.set_ylabel('Standard free energy [kJ/mol]')
     ax.legend()
 plt.tight_layout()
 plt.savefig('stds_Meth_ATP.pdf')

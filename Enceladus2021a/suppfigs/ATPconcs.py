@@ -31,17 +31,17 @@ for T in Ts:
     E = Enc('Enceladus', T=T, depth=0)
     TOMobj = TOM(E, paramchange={'Basal':1e-15, 'Tdef':'None'})
 
-    GATP.append(TOMobj.respiration.G_P)
+    GATP.append(TOMobj.respiration.G_P/1000)
 
     # TOMobj.respiration.build_ATP_reaction([0.0002, 0.004, 0.0056, 7.])#[0.00001,0.0004,0.05,7.])
 
-    worseGATP.append(TOMobj.respiration.G_P*0.5)
-    minGATP.append(TOMobj.respiration.G_P*0.25)
+    worseGATP.append(TOMobj.respiration.G_P*0.5/1000)
+    minGATP.append(TOMobj.respiration.G_P*0.25/1000)
 
 
     # TOMobj.respiration.build_ATP_reaction([0.002,0.022,0.0007,7.])#[0.001,0.04,0.0005,7.])
-    betterGATP.append(TOMobj.respiration.G_P*1.5)
-    maxGATP.append(TOMobj.respiration.G_P*2.0)
+    betterGATP.append(TOMobj.respiration.G_P*1.5/1000)
+    maxGATP.append(TOMobj.respiration.G_P*2.0/1000)
 
 
 
@@ -56,19 +56,12 @@ axs.plot(Ts, maxGATP, color='c', linestyle='dotted', label=r'$n_\mathregular{ATP
 # axs.plot(Ts, worseGATP, color='b', linestyle='dashed', label='0.0002, 0.004, 0.0056')
 # axs.plot(Ts, betterGATP, color='b', linestyle='dotted', label='0.002,0.022,0.0007')
 
-
-
-print(min(minGATP))
-print(max(maxGATP))
-
-
-
 # axs[1].plot(Ts, GATP80, color = 'b', linestyle='dashed', label='80 bar')
 
 for ax in [axs]:
     ax.set_xlabel('Temperature [K]')
     ax.set_xlim(273,473)
-    ax.set_ylabel('free energy [J/mol]')
+    ax.set_ylabel('Gibbs free energy [kJ/mol]')
     ax.legend(bbox_to_anchor=(0., 1.12, 1., .102), loc=3,
            ncol=2, mode="expand", borderaxespad=0.)
 plt.tight_layout()
