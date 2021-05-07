@@ -12,7 +12,7 @@ To replicate, uncomment as needed.
 """Methanogenesis energy plots (Figure 1)"""
 
 ## this generates figure 1 in the manuscript
-EPS.make_MGEContourPlot(CO2origin='HTHeatingSalts', save='figs/energyplot_endmembersalt.pdf', show=False, pHax=True, pHbars=True, quotienttype='salty_endmember')
+# EPS.make_MGEContourPlot(CO2origin='HTHeatingSalts', save='figs/energyplot_endmembersalt.pdf', show=False, pHax=True, pHbars=True, quotienttype='salty_endmember')
 
 ## this generates an energy plot with the salts fixed at nominal values
 # EPS.make_MGEContourPlot(CO2origin='HTHeatingSalts', save=None, show=True, pHax=False, pHbars=False, quotienttype='salty_nominal')

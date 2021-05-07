@@ -85,12 +85,16 @@ def add_maintenance_lines(ax, colors=['tab:orange', 'k','y','c']):
     TE = es.applications.theory_estimates(TOM, _Enc)
     Ti, L10, L2 = [],[],[]
     for t in T2:
+        TE.loc.change_T(t)
+        TE.org.get_ESynth(AA=True) # update the synthesis energy
         td = TE.temperature_defenses(t)
-        Ti.append(td['Tijhuis'])
+        Ti.append(td['TijhuisAnaerobe'])
         L10.append(td['Lever10pc'])
         L2.append(td['Lever2pc'])
 
-    ax.fill_between(T2, np.log10(Ti), np.log10(Ti), color=colors[1], alpha=0.8, lw=3.)
+    Ti = np.array(Ti)
+
+    ax.fill_between(T2, np.log10(Ti-(0.32*Ti)), np.log10(Ti+(0.32*Ti)), color=colors[1], alpha=0.4, lw=3.)
 
     ax.fill_between(T2, np.log10(L10), np.log10(L2), color=colors[2], alpha=0.4)
 
@@ -471,7 +475,7 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
     ax[0][0].plot([0],[0], c=cmaplist[4], label='Enough power available in the nominal high-salt scenario', linewidth=10)
     ax[0][0].plot([0],[0], c=cmaplist[5], label='Enough power available in the best-case high-salt scenario', linewidth=10)
 
-    ax[0][0].set_title('To exceed maximum optimal maintenance \n (Higgins+ 2020)', fontsize=13)
+    ax[0][0].set_title('To exceed maximum optimal maintenance \n (Higgins & Cockell 2020)', fontsize=13)
     ax[0][1].set_title('To exceed empirical maintenance for anaerobes \n (Tijhuis+ 1993)', fontsize=13)
     ax[1][0].set_title('To exceed minimal maintenance power \n (Lever+ 2015)', fontsize=13)
     ax[1][1].set_title('To exceed minimal Earth subsurface power supplies \n (Bradley+ 2020)', fontsize=12)

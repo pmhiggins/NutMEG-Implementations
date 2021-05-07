@@ -245,9 +245,10 @@ def get_maintenances(T,pH, E=None, TOM=None, nATP=1.0):
         TOM = getE_TOM(E)
     # make an Enceladus
     TE = es.applications.theory_estimates(TOM, E)
-
+    TE.loc.change_T(T)
+    TE.org.get_ESynth(AA=True)
     td = TE.temperature_defenses(T)
-    Ti = td['Tijhuis']
+    Ti = td['TijhuisAnaerobe']
         # L10.append(td['Lever10pc'])
     L2 = td['Lever2pc']
     return PT, Ti, L2
