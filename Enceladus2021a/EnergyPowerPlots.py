@@ -26,12 +26,12 @@ To replicate, uncomment as needed.
 
 
 
-"""Power Supply Nominal Plot (Figure xx)"""
+"""Power Supply Nominal Plot (Figure 2)"""
 
 # EPS.make_PSContourPlot(CO2origin='HTHeatingSalts', save='figs/PowerSupply_nominal.pdf', show=False, mesh=True)
 
 
-"""Plus / minus power supply plots (Figure xx)"""
+"""Plus / minus power supply plots (Figure 3)"""
 
 ## endmember power supplies (manuscript figure xx)
 # EPS.PSunc_plot(CO2origin='HTHeatingSalts', mesh=True, save='PowerSupply_comp_k.pdf')
@@ -46,9 +46,9 @@ To replicate, uncomment as needed.
 
 
 
-""" Habitability grids (Figure xx) """
+""" Habitability grids (Figure 6) """
 
-# EPS.PShabitabilityPlot(nATP = 1.0)
+EPS.PShabitabilityPlot(nATP = 1.0)
 
 ## supplemental habitability plots
 # EPS.PShabitabilityPlot(nATP = 2.0)

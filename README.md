@@ -25,3 +25,5 @@ Then to run some code:
 **Venus** Code for assessing the energetic availability in Venus' clouds.  Outputs of this were used in the publication: 'Biologically available Chemical Energy in the Temperate but Uninhabitable Venusian Cloud Layer: What do we Want to Know?' Cockell et al. 2021 Astrobiology [DOI](https://doi.org/10.1089/ast.2020.2280)
 
 **TOM** Code for examining the growth and biosignature behaviour of methanogens.  Outputs of this were used in the publication: 'A bioenergetic model to predict habitability, biomass and biosignatures in extreme conditions and astrobiolgy' Higgins & Cockell (2020) J. R. Soc. Interface [DOI](https://doi.org/10.1098/rsif.2020.0588)
+
+**Enceladus** Code for mapping the habitability of the parameter space of Enceladus' ocean.

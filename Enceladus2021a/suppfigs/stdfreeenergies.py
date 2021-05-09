@@ -27,14 +27,14 @@ GM1, GATP1 = [],[]
 GM100, GATP100 = [],[]
 
 for T in range(273,473):
-    E = Enc('Enceladus', T=T, depth=0)
+    E = Enc('Enceladus', T=T, depth=0.)
     E.env.P = 1e5
     TOMobj = TOM(E, paramchange={'Basal':1e-15, 'Tdef':'None'})
 
     GM1.append(TOMobj.respiration.net_pathway.std_molar_gibbs/1000)
     GATP1.append(TOMobj.respiration.ATP_production.std_molar_gibbs/1000)
 
-    E = Enc('Enceladus', T=T, depth=10)
+    E = Enc('Enceladus', T=T, depth=1.)
     E.env.P = 1e7
     TOMobj = TOM(E, paramchange={'Basal':1e-15, 'Tdef':'None'})
 
