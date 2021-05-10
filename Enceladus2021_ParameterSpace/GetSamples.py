@@ -71,7 +71,7 @@ def varianceexample(samplesize):
             fontsize=12, ha='left', va='center', rotation='vertical',
             arrowprops=dict(arrowstyle='-[, widthB=5.0, lengthB=1.0', lw=2))
 
-    ax[1][-1].annotate('nominal ocean', xy=(1.1, 0.5), xytext=(1.2, 0.5), xycoords='axes fraction',
+    ax[1][-1].annotate('nominal salt ocean', xy=(1.1, 0.5), xytext=(1.2, 0.5), xycoords='axes fraction',
             fontsize=12, ha='left', va='center', rotation='vertical',
             arrowprops=dict(arrowstyle='-[, widthB=5.0, lengthB=1.0', lw=2))
 
@@ -94,16 +94,17 @@ def varianceexample(samplesize):
         for a in i[1:]:
             a.get_yaxis().set_ticks([])
 
-    for a in ax:
-        # LHS
-        a[0].set_ylabel('Variance')
+    ax[1][0].set_ylabel('Variance in log$_{10}$(Power Supply [W cell$^{-1}$])', fontsize=14)
+    # for a in ax:
+    #     # LHS
+
     for a in ax[-1]:
         # bottom row
         a.set_xlabel('Temperature [K]')
 
     # ax[1][0] = all_varianceplot_pH(ax[1][0], 100, 300)
     # ax[1][1] = all_varianceplot_pH(ax[1][1], 100, 300, salttype='high')
-    fig.subplots_adjust(bottom=0.15, left=0.08, right=0.92, top=0.92, wspace=0.05, hspace=0.05)
+    fig.subplots_adjust(bottom=0.15, left=0.06, right=0.92, top=0.92, wspace=0.06, hspace=0.06)
     plt.savefig('figs/total_variance.pdf')
     # plt.show()
 
