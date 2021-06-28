@@ -13,6 +13,7 @@ mpl.rcParams['axes.linewidth'] = 2
 mpl.rcParams['mathtext.fontset'] = 'cm'
 mpl.rcParams['xtick.labelsize'] = 12
 mpl.rcParams['ytick.labelsize'] = 12
+mpl.rc('axes', unicode_minus=False)
 
 def tovol(vol, lsts):
     """Convert lists passed into unit volume"""
