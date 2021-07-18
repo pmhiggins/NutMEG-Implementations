@@ -51,7 +51,7 @@ def add_pH_lines(ax, color='dimgray', ls='dashed',
         if unc:
             ax.fill_betweenx(Tfloats, df2['pH'], df3['pH'], facecolor='y', alpha=0.3)
     # for the label
-    ax.plot([0,0], [0,0], c=color, linestyle=ls, linewidth=3, label='pH when warmed from 273.15 K')
+    ax.plot([0,0], [0,0], c=color, linestyle=ls, linewidth=3, label='pH when warmed from 273 K')
     return ax
 
 def add_pH_boxes(ax, CDAINMS=True, postberg=True):
@@ -102,10 +102,10 @@ def add_maintenance_lines(ax, colors=['tab:orange', 'k','y','c']):
     return ax
 
 def add_maintenance_labels(ax, colors=['tab:orange', 'k','g','c']):
-    ax.fill_between([0,0], [1,1],[1,1], color=colors[0], alpha=0.6, label='Maintenance Power in optimum conditions (Higgins & Cockell 2020)')
-    ax.fill_between([0,0], [1,1],[1,1], color=colors[1], alpha=0.6, label='Maintenance Power for anaerobes (Tijhuis et al. 1998)')
-    ax.fill_between([0,0], [1,1],[1,1], color=colors[2], alpha=0.6, label='Minimal Maintenance Power (Lever et al. 2015)')
-    ax.fill_between([0,0], [1,1],[1,1], color=colors[3], alpha=0.6, label='Min. subsurface power supplies (Bradley et al. 2020)')
+    ax.fill_between([0,0], [1,1],[1,1], color=colors[0], alpha=0.6, label='Maintenance power in optimum conditions (Higgins & Cockell 2020)')
+    ax.fill_between([0,0], [1,1],[1,1], color=colors[1], alpha=0.6, label='Maintenance power for anaerobes (Tijhuis et al. 1993)')
+    ax.fill_between([0,0], [1,1],[1,1], color=colors[2], alpha=0.6, label='Minimal maintenance power (Lever et al. 2015)')
+    ax.fill_between([0,0], [1,1],[1,1], color=colors[3], alpha=0.6, label='Minimum subsurface power supplies (Bradley et al. 2020)')
     return ax
 
 
@@ -185,7 +185,7 @@ def MethanogenesisEnergyContourPlot(ax, CO2origin='pH',
     ax.contour(XX, YY, ZZ[1]/1000, levels=levels, linestyles='dotted', colors=[contourcolor], vmin=-150, vmax=80, linewidths=2.5)
     ax.contour(XX, YY, ZZ[2]/1000, levels=levels, linestyles='dotted', colors=[contourcolor], vmin=-150, vmax=80, linewidths=2.5)
 
-    ax.plot([0,0], [0,0], c= contourcolor, label='Uncertainty bounds on free energy contour', linestyle='dotted', linewidth=2.5)
+    ax.plot([0,0], [0,0], c= contourcolor, label='Uncertainty bounds on Gibbs free energy contour', linestyle='dotted', linewidth=2.5)
 
     return ax, contf
 
@@ -195,13 +195,13 @@ def make_MGEContourPlot(CO2origin='pH', save='Energyplot.pdf', show=False, pHax=
     fig, ax = plt.subplots(figsize=(8,8))
     ax, contf = MethanogenesisEnergyContourPlot(ax, CO2origin=CO2origin, pHrange=np.linspace(7,12, num=11), quotienttype=quotienttype)
 
-    fig.colorbar(contf, label='Free Energy of methanogenesis [kJ/mol]', orientation='horizontal', pad=0.12)
+    fig.colorbar(contf, label='Gibbs free energy of methanogenesis [kJ mol$^{-1}$]', orientation='horizontal', pad=0.12)
     if pHax:
         ax = add_pH_lines(ax, pHnames = ['7.0','8.0','9.0','10.0','11.0','12.0'])
     if pHbars:
         add_pH_boxes(ax, CDAINMS=False)
     ax.set_xlim(7,12)
-    ax.set_xlabel('Bulk ocean pH (e.g. at 273 K)')
+    ax.set_xlabel('Bulk ocean pH (at 273 K)')
     ax.set_ylabel('Temperature [K]')
     ax.set_ylim(273.15,473)
     ax.annotate("", xy=(9.4, 390), xytext=(9.1, 375), arrowprops=dict(headwidth=5, headlength=5, width=0.1, fc='k'))
@@ -232,7 +232,7 @@ def MGEcomparison_plot():
     ax[1], contf2 = MethanogenesisEnergyContourPlot(ax[1],
       pHrange=np.linspace(7,12, num=11), CO2origin='HTHeating')
 
-    fig.colorbar(contf, label='Free Energy of methanogenesis [J/mol]', orientation='vertical', pad=0.08)
+    fig.colorbar(contf, label='Gibbs free energy of methanogenesis [J mol$^{-1}$]', orientation='vertical', pad=0.08)
     plt.show()
 
 
@@ -311,10 +311,10 @@ def make_PSContourPlot(CO2origin='pH', save='Powersupply.pdf', show=False, mesh=
     fig, ax = plt.subplots(figsize=(8,8))
     ax, contf = PSContourPlot(ax, CO2origin=CO2origin, pHrange=np.linspace(7,12, num=11), mesh=mesh, cmap='BuPu')
 
-    fig.colorbar(contf, label='log10 (Power Supply [W/cell])', orientation='horizontal', pad=0.08, extend='both')
+    fig.colorbar(contf, label='$\log_{10}{(\mathregular{Power\ Supply\ [W\ cell^{-1}]})}$', orientation='horizontal', pad=0.08, extend='both')
 
     ax.set_xlim(6.75,12.25)
-    ax.set_xlabel('Bulk ocean pH (e.g. at 273 K)')
+    ax.set_xlabel('Bulk ocean pH (at 273 K)')
     ax.set_ylabel('Temperature [K]')
     ax.set_ylim(268.15,478)
     if Tline:
@@ -359,12 +359,12 @@ def PSunc_plot(CO2origin='HTHeating20', save='Powersupply_comp.pdf', show=False,
         axs[1].set_title('Upper Bound')
 
 
-        fig.colorbar(contf, ax=[axs[0], axs[1]], label='log10 (Power Supply [W/cell])', orientation='horizontal', pad=0.001, extend='both')
+        fig.colorbar(contf, ax=[axs[0], axs[1]], label='$\log_{10}{(\mathregular{Power\ Supply\ [W\ cell^{-1}]})}$', orientation='horizontal', pad=0.001, extend='both')
         for ax in axs:
             # ax.set_xlim(7,12)
             ax.set_xlim(6.75,12.25)
 
-            ax.set_xlabel('Bulk ocean pH (e.g. at 273 K)')
+            ax.set_xlabel('Bulk ocean pH (at 273 K)')
             ax.set_ylabel('Temperature [K]')
             # ax.set_ylim(273.15,473)
             ax.set_ylim(268.15,478)
@@ -485,7 +485,7 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
         for a in aa:
             a.set_xlim(6.75, 12.25)
             a.set_ylim(268, 408)
-            a.set_xlabel('Bulk ocean pH (e.g. pH at 273 K)')
+            a.set_xlabel('Bulk ocean pH (at 273 K)')
             a.set_ylabel('Temperature [K]')
 
     plt.subplots_adjust(wspace=0.2, hspace=0.33, left=0.08, right=0.98, bottom=0.05, top=0.78)

@@ -184,8 +184,8 @@ def nominal2x3(Ts=[275, 300, 325], pHs=[8,9,10], save='figs/nominal2x3.pdf', sho
         ax[i][0] = nominalline_pH(ax[i][0], T, nomcols[3], ls='dashed', salttype='low', fixupdate={'nATP':nATPchoice}, fn_preamble='nATP_'+str(nATPchoice))
         ax[i][0] = nominalline_pH(ax[i][0], T, nomcols[4], ls='dotted', salttype='low', fixupdate={'H2':-1., 'CH4':1., 'nATP':nATPchoice, 'k_corr':-1.0}, fn_preamble='mined_nATP'+str(nATPchoice))
 
-        ax[i][0].set_xlabel('Bulk ocean pH (e.g. pH at 273 K)')
-        ax[i][0].set_ylabel('Power [W/cell]')
+        ax[i][0].set_xlabel('Bulk ocean pH (at 273 K)')
+        ax[i][0].set_ylabel('$\log_{10}{(\mathregular{Power\ [W\ cell^{-1}]})}$')
         if maintenance:
             EPS.add_pH_maintenance_lines(ax[i][0], T, colors=maincols)
         ax[i][0].set_xlim(7,12)
@@ -201,7 +201,7 @@ def nominal2x3(Ts=[275, 300, 325], pHs=[8,9,10], save='figs/nominal2x3.pdf', sho
 
 
         ax[j][1].set_xlabel('Temperature [K]')
-        ax[j][1].set_ylabel('Power [W/cell]')
+        ax[j][1].set_ylabel('$\log_{10}{(\mathregular{Power\ [W\ cell^{-1}]})}$')
         ax[j][1].yaxis.set_label_position("right")
         ax[j][1].yaxis.tick_right()
         if maintenance:

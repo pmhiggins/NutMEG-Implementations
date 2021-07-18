@@ -166,7 +166,7 @@ axs.legend(fontsize=14)
 axs.grid(b=True, which='major', color='#666666', linestyle='-', alpha=0.8)
 axs.set_yscale('log')
 
-axs.set_ylabel('$\mathregular{CH}_4$ uptake rate $[\mathregular{M\ s}^{-1}]$', fontsize=14)
+axs.set_ylabel('$\mathregular{CH}_4$ production rate $[\mathregular{M\ s}^{-1}]$', fontsize=14)
 # axs[1].set_ylabel('Growth rate $[\mathregular{s}^{-1}]$', fontsize=14)
 axs.set_xlabel('Temperature [K]', fontsize=14)
 # plt.ylim(-17,3)

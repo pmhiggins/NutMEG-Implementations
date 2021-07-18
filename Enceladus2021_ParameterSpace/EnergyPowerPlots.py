@@ -33,7 +33,7 @@ To replicate, uncomment as needed.
 
 """Plus / minus power supply plots (Figure 3)"""
 
-## endmember power supplies (manuscript figure xx)
+## endmember power supplies (manuscript figure 3)
 # EPS.PSunc_plot(CO2origin='HTHeatingSalts', mesh=True, save='PowerSupply_comp_k.pdf')
 
 ## endmember plots with different nATP values
@@ -48,7 +48,7 @@ To replicate, uncomment as needed.
 
 """ Habitability grids (Figure 6) """
 
-EPS.PShabitabilityPlot(nATP = 1.0)
+# EPS.PShabitabilityPlot(nATP = 1.0)
 
 ## supplemental habitability plots
 # EPS.PShabitabilityPlot(nATP = 2.0)

@@ -12,7 +12,7 @@ from colormapping import cmapper
 # SPS.nominal2x3(save='figs/nominal2x3_n10.pdf')
 # SPS.nominal2x3(save='figs/nominal2x3_n05.pdf', nATPchoice=0.5)
 # SPS.nominal2x3(save='figs/nominal2x3_n15.pdf', nATPchoice=1.5)
-# SPS.nominal2x3(save='suppfigs/nominal2x3_n025.pdf', nATPchoice=0.25)
+SPS.nominal2x3(save='suppfigs/nominal2x3_n025.pdf', nATPchoice=0.25)
 # SPS.nominal2x3(save='suppfigs/nominal2x3_n200.pdf', nATPchoice=2.0)
 
 
