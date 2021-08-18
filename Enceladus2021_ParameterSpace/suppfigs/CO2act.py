@@ -81,24 +81,32 @@ OH = nm.reaction.reagent('OH-', R, phase='aq')
 rxn = nm.reaction.reaction({H2O:1}, {H:1, OH:1}, R)
 
 Ts = np.linspace(273,500, num=(500-273)*2)
-pHs = []
+pHs, pHs_100bar = [], []
 for T in Ts:
- rxn.env.T = T
- rxn.rto_current_env()
- pHs.append(-math.log10(math.sqrt(math.exp(rxn.lnK))))
+    rxn.env.T = T
+    rxn.env.P = 1e5
+    rxn.rto_current_env()
+    pHs.append(-math.log10(math.sqrt(math.exp(rxn.lnK))))
+    rxn.env.P = 1e7
+    rxn.rto_current_env()
+    pHs_100bar.append(-math.log10(math.sqrt(math.exp(rxn.lnK))))
+
 
 H2Oc = 'rebeccapurple'
 ax[1][0].plot(Ts, pHs, c=H2Oc, linewidth=2, linestyle='dashed')
+ax[1][0].plot(Ts, pHs_100bar, c='tab:orange', linewidth=2, linestyle='dotted')
 ax[1][0].text(470, 6.1, 'pH of pure water', horizontalalignment='right',
 verticalalignment='center', fontsize=12, color=H2Oc)
 ax[1][1].plot(Ts, pHs, c=H2Oc, linewidth=2, linestyle='dashed')
+ax[1][1].plot(Ts, pHs_100bar, c='tab:orange', linewidth=2, linestyle='dotted')
+
 ax[1][1].text(470, 6.1, 'pH of pure water', horizontalalignment='right',
 verticalalignment='center', fontsize=12, color=H2Oc)
 
 
 for i, aa in enumerate(ax):
     for j, a in enumerate(aa):
-        a.set_xlabel('Temperature [K]')
+        a.set_xlabel('Seawater temperature [K]')
         a.set_xlim(240,475)
         if i ==0:
             a.set_yscale('log')
