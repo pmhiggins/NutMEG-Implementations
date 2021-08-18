@@ -12,14 +12,22 @@ results much, so just run the code again after getting the error and it wil be f
 
 import sys, os, ast
 sys.path.append(os.path.dirname(__file__)+'../../NutMEG/')
+# sys.path.append(os.path.dirname(__file__)+'../../NutMEG-testing/Thesis')
 
 import NutMEG as nm
 import NutMEG.reaction as reaction
 import NutMEG.plotter as nutplt
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import pandas as pd
 import sqlite3
 import numpy as np
+try:
+    # sets up matplotlib for a slightly different style. If the desired fonts
+    # aren't installed this may throw an error.
+    import mplSetup
+except:
+    pass
 
 # choose a path and filename to a database to save model output. This will save
 # having to rerun potentially many simulations again just for replotting.
@@ -88,8 +96,8 @@ def initial_conditions(R, comp={}):
     mol_HS = comp.pop('HS-', 1e-7)
 
     # life also needs a source of N and P
-    mol_NH3 = comp.pop('NH3(aq)', 0.001)
-    mol_H2PO4 = comp.pop('H2PO4-', 0.001)
+    mol_NH3 = comp.pop('NH3(aq)', 0.1)
+    mol_H2PO4 = comp.pop('H2PO4-', 0.1)
 
     # concentration of H is tied to pH.
     mol_H=10**(-R.pH)
@@ -173,10 +181,10 @@ def simulate_competition(comp={}, k=[0.001,5000], inflow={'H+':0},
 
     return ES.dbh.SimID
 
+def cSeries(i):
+    return [plt.cm.get_cmap('GnBu_r')(i/6), plt.cm.get_cmap('OrRd_r')(i/6)]
 
-cSeries=['b', 'r']
-
-def orgcurves(orgfig, SimIDs, param='no_alive', ax=None, ls='-'):
+def orgcurves(orgfig, SimIDs, i, param='no_alive', ax=None, ls='-'):
     """plot the ecosystem simulation parameter param against time for the simulation(s)
     in SimIDs. You can add any parameter from the Full_Results_Sim table.
     When you run a simulation, you'll see some options output every 100 steps.
@@ -210,7 +218,7 @@ def orgcurves(orgfig, SimIDs, param='no_alive', ax=None, ls='-'):
     # this plots on the axis and passes the axes back. You could just use
     # matplotlib if you prefer
     return orgfig.linearplot(xvals=TSeries, yvals=paramSeries, ax=ax,
-      colors=cSeries, show=False, ls=[ls])
+      colors=cSeries(i), show=False, ls=['-','--'])
 
 
 def compcurves(orgfig, SimIDs, ax=None, ls='-'):
@@ -248,11 +256,11 @@ def compcurves(orgfig, SimIDs, ax=None, ls='-'):
 
 
 
-fig, axs = plt.subplots(3, 2, figsize=(6,8))
+fig, axs = plt.subplots(3, 2, figsize=(8,10))
 orgfig = nutplt.growthparams(fig=fig)
 
 Sim = simulate_competition(methanogen_changes={'Basal':1e-15}, SR_changes={'Basal':1e-15})
-orgcurves(orgfig, [Sim], ax=axs[0][0])
+orgcurves(orgfig, [Sim], 0,ax=axs[0][0])
 compcurves(orgfig, [Sim], ax=axs[0][1])
 
 axs[0][1].set_yscale('log')
@@ -263,45 +271,67 @@ axs[0][1].set_title('Control Composition')
 # curves.
 
 # let's increase the maintenance power of the methanogen, making survival harder
-for MP in [2e-15, 5e-15, 1e-14, 5e-14]:
+for i, MP in enumerate([2e-15, 5e-15, 1e-14, 5e-14]):
     Sim = simulate_competition(methanogen_changes={'Basal':MP}, SR_changes={'Basal':1e-15})
-    orgcurves(orgfig, [Sim], ax=axs[1][0], ls='--')
-axs[1][0].set_title('Maintenance Power')
+    orgcurves(orgfig, [Sim], i, ax=axs[1][0], ls='--')
+axs[1][0].set_title('Methanogen maintenance power')
 axs[1][0].set_yscale('log')
 
 
 
 # change the yield of ATP per mol metabolism - for the sulfate reducer
-for n in np.linspace(0.5,1.5, num=5):
+for i, n in enumerate(np.linspace(1.0,2.0, num=5)):
     Sim = simulate_competition(methanogen_changes={'Basal':1e-15}, SR_changes={'Basal':1e-15, 'n_ATP':n})
-    orgcurves(orgfig, [Sim], ax=axs[1][1], ls='--')
+    orgcurves(orgfig, [Sim], i, ax=axs[1][1], ls='--')
 axs[1][1].set_title('ATP Yield')
 
 
 # let's add an inflow of H+
-for h in np.logspace(-16,-12, num=5):
+for i, h in enumerate(np.logspace(-16,-12, num=5)):
     Sim = simulate_competition(methanogen_changes={'Basal':1e-15}, SR_changes={'Basal':1e-15}, reactor_changes={'composition_inputs':{'H+':h}})
-    orgcurves(orgfig, [Sim], ax=axs[2][0], ls='--')
+    orgcurves(orgfig, [Sim], i, ax=axs[2][0], ls='--')
 axs[2][0].set_title('H+ inflow')
 
 
 
 # give both organisms a life span which they can't exceed.
-for l in [1e3,1e4,5e4]:
+for i, l in enumerate([float('inf'), 5e4, 1e4,1e3]):
     Sim = simulate_competition(methanogen_changes={'Basal':1e-15, 'base_life_span':l}, SR_changes={'Basal':1e-15, 'base_life_span':l})
-    orgcurves(orgfig, [Sim], ax=axs[2][1], ls='--')
+    orgcurves(orgfig, [Sim], i*2, ax=axs[2][1], ls='--')
 axs[2][1].set_title('Vary lifespans')
 axs[2][1].set_xlim(0,1e6)
 
+def get_fmt(lims=(-3,3)):
+    fmt = mpl.ticker.ScalarFormatter(useMathText=True)
+    fmt.set_powerlimits((-3,3))
+    return fmt
 
 # tidy up the axes a little
 for ax in axs:
     for a in ax:
         a.set_yscale('log')
         a.set_xlabel('Time [s]')
-plt.tight_layout()
+        a.set_ylabel('Population [cells]')
+        a.get_xaxis().set_major_formatter(get_fmt())
+axs[0][1].set_ylabel('Concentration [mol L$^{-1}$]')
+axs[2][1].set_xlim(-1e4,9e5)
 
-plt.show()
+
+# [CO2, SO4, H2, H, CH4]
+# ['b', 'r', 'g', 'c', 'k']
+axs[0][1].set_xlim(-1.3e4, 3.9e5)
+axs[0][1].text(3.4e5, 9e-8, 'H$^{+}$', color='c', horizontalalignment='left', verticalalignment='center')
+axs[0][1].text(3.4e5, 1.2e-4, 'CH$_{4}$', color='k', horizontalalignment='left', verticalalignment='center')
+axs[0][1].text(3.4e5, 3e-4, 'H$_{2}$', color='g', horizontalalignment='left', verticalalignment='center')
+axs[0][1].text(3.4e5, 5.5e-4, 'CO$_{2}$', color='b', horizontalalignment='left', verticalalignment='center')
+axs[0][1].text(3.4e5, 1e-3, 'SO$_{4}^{2\mathregular{-}}$', color='r', horizontalalignment='left', verticalalignment='center')
+
+
+
+
+# plt.tight_layout()
+fig.subplots_adjust(right=0.986, bottom=0.052, left=0.086, top=0.974, hspace=0.33, wspace=0.25)
+plt.savefig('competition.pdf')
 
 
 #this prints out the tables in the database for the orgnaisms and reactor
