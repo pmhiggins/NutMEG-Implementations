@@ -26,7 +26,14 @@ import matplotlib.pyplot as plt
 import NutMEG as es
 from NutMEG.reactor.saved_systems.VenusDrop import VenusDrop
 import NutMEG.reaction as reaction
-
+try:
+    # enables a slgihtly prettier plot (in Pete's opinion...)
+    # if relevant fonts not installed, or CE folder moved will throw an
+    # unnecessary error, so catch it if that happens
+    sys.path.append(os.path.dirname(__file__)+'../Competition_Example')
+    import mplSetup
+except:
+    pass
 
 def setup_sulfatereduction(R, k_RTP=1):
     """ Set up a sulate reduction reaction to pass to the sulfate reducer
@@ -237,7 +244,7 @@ def Venus_overall_methanogenesis():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        minG.append(SR.respiration.net_pathway.molar_gibbs)
+        minG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
         #for midG, use recorded values
         V.update_reagent('H2(aq)', 25)
@@ -249,7 +256,7 @@ def Venus_overall_methanogenesis():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        midG.append(SR.respiration.net_pathway.molar_gibbs)
+        midG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
         #for maxG, maximise products, minimise reactants
         V.update_reagent('H2(aq)', 15)
@@ -261,7 +268,7 @@ def Venus_overall_methanogenesis():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        maxG.append(SR.respiration.net_pathway.molar_gibbs)
+        maxG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
     return Tlst, minG, midG, maxG
 
@@ -294,7 +301,7 @@ def Venus_overall_sulfatereduction():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        minG.append(SR.respiration.net_pathway.molar_gibbs)
+        minG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
         #for midG, use recorded values
         V.update_reagent('H2(aq)', 25)
@@ -304,7 +311,7 @@ def Venus_overall_sulfatereduction():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        midG.append(SR.respiration.net_pathway.molar_gibbs)
+        midG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
         #for maxG, maximise products, minimise reactants
         V.update_reagent('H2(aq)', 15)
@@ -314,7 +321,7 @@ def Venus_overall_sulfatereduction():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        maxG.append(SR.respiration.net_pathway.molar_gibbs)
+        maxG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
     return Tlst, minG, midG, maxG
 
@@ -349,7 +356,7 @@ def Venus_overall_h2oxidation():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        minminG.append(SR.respiration.net_pathway.molar_gibbs)
+        minminG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
         #for minG, maximise reactants, minimise products
         V.update_reagent('H2(aq)', 35)
@@ -360,7 +367,7 @@ def Venus_overall_h2oxidation():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        minG.append(SR.respiration.net_pathway.molar_gibbs)
+        minG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
         #for midG, use recorded values
         V.update_reagent('H2(aq)', 25)
@@ -371,7 +378,7 @@ def Venus_overall_h2oxidation():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        midG.append(SR.respiration.net_pathway.molar_gibbs)
+        midG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
         #for maxG, maximise products, minimise reactants
         V.update_reagent('H2(aq)', 15)
@@ -382,7 +389,7 @@ def Venus_overall_h2oxidation():
         # the current environment.
         SR.respiration.net_pathway.update_molar_gibbs_from_quotient()
 
-        maxG.append(SR.respiration.net_pathway.molar_gibbs)
+        maxG.append(SR.respiration.net_pathway.molar_gibbs/1000)
 
     return Tlst, minG, midG, maxG, minminG
 
@@ -483,14 +490,14 @@ def overall_plot():
     Tlst, SminG, SmidG, SmaxG = Venus_overall_sulfatereduction()
     Tlst, HminG, HmidG, HmaxG, HminminG = Venus_overall_h2oxidation()
 
-    fig, ax = plt.subplots(figsize=(7,5), dpi=150)
+    fig, ax = plt.subplots(figsize=(6,4))#, dpi=150)
 
 
 
     ax.plot(Tlst, MmidG, c='#5e3c99', label='Methanogenesis', lw=2)
     ax.fill_between(Tlst, MminG, MmaxG, color='#5e3c99', alpha=0.5)
 
-    ax.plot(Tlst, SmidG, c='#fdb863', label='Sulfate Reduction', lw=2)
+    ax.plot(Tlst, SmidG, c='#fdb863', label='Sulfate reduction', lw=2)
     ax.fill_between(Tlst, SminG, SmaxG, color='#fdb863', alpha=0.5)
 
     ax.plot(Tlst, HmidG, c='#e66101', label=r'$\mathregular{H}_2$ oxidation', lw=2)
@@ -498,15 +505,15 @@ def overall_plot():
 
     ax.plot(Tlst, HminminG, c='#e66101', label=r'$\mathregular{H}_2$ oxidation ($\mathregular{O}_2$ 3ppm)', lw=2, ls='--')
 
-    ax.axhline(0, c='k', lw=0.5)
+    ax.axhline(0, c='k', lw=2.0)
 
 
 
     ax.set_xlabel('Temperature [K]')
-    ax.set_ylabel('Free energy of reaction [J/mol]')
+    ax.set_ylabel('Free energy of reaction [kJ mol$^{1}$]')
     # ax.set_title("Free energy of metabolic reactions within composition uncertainties \n in the Venusian atmosphere's temperate region")
     ax.legend()
     plt.tight_layout()
-    plt.savefig('summary.tif')
+    plt.savefig('summary.pdf')
 
 overall_plot()
