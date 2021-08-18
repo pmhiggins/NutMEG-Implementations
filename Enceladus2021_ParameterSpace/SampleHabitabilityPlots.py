@@ -7,12 +7,12 @@ import SamplingPlotStyles as SPS
 import GetSamples as GS
 from colormapping import cmapper
 
-"""nominal power supply + maintenance plots"""
+"""nominal power supply + maintenance plots (Figures 5, S9, S10)"""
 
 # SPS.nominal2x3(save='figs/nominal2x3_n10.pdf')
 # SPS.nominal2x3(save='figs/nominal2x3_n05.pdf', nATPchoice=0.5)
 # SPS.nominal2x3(save='figs/nominal2x3_n15.pdf', nATPchoice=1.5)
-SPS.nominal2x3(save='suppfigs/nominal2x3_n025.pdf', nATPchoice=0.25)
+# SPS.nominal2x3(save='suppfigs/nominal2x3_n025.pdf', nATPchoice=0.25)
 # SPS.nominal2x3(save='suppfigs/nominal2x3_n200.pdf', nATPchoice=2.0)
 
 
@@ -22,15 +22,16 @@ SPS.nominal2x3(save='suppfigs/nominal2x3_n025.pdf', nATPchoice=0.25)
 # SPS.ones_varianceplot(salttype='low', show=False, cm=cmapper.b2a(), samplesize=1000)
 
 
-"""Total variance plots"""
+"""Total variance plots (Figure 4)"""
 ## use the below to extend the sample by a set amount as needed
 # GS.varianceexmaple_extend(2000, 5000, 1000)
+
 ## use the below to plot the total variance
-GS.varianceexample(2000)
+# GS.varianceexample(2000)
 
 
 def ind_v_plots():
-    """supplemental data plots contribution of the independent variables)"""
+    """supplemental data plots contribution of the independent variables"""
     SPS.ones_varianceplot(T=275, salttype='nom', show=False, cm=cmapper.b2a(), samplesize=1000)
     SPS.ones_varianceplot(T=275, salttype='high', show=False, cm=cmapper.b2a(), samplesize=1000)
     SPS.ones_varianceplot(T=275, salttype='low', show=False, cm=cmapper.b2a(), samplesize=1000)
