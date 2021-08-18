@@ -200,7 +200,7 @@ def nominal2x3(Ts=[275, 300, 325], pHs=[8,9,10], save='figs/nominal2x3.pdf', sho
         ax[j][1] = nominalline_T(ax[j][1], pH, nomcols[4], ls='dotted', salttype='low', fixupdate={'H2':-1., 'CH4':1., 'nATP':nATPchoice, 'k_corr':-1.0}, fn_preamble='mined_nATP'+str(nATPchoice))
 
 
-        ax[j][1].set_xlabel('Temperature [K]')
+        ax[j][1].set_xlabel('Seawater temperature [K]')
         ax[j][1].set_ylabel('$\log_{10}{(\mathregular{Power\ [W\ cell^{-1}]})}$')
         ax[j][1].yaxis.set_label_position("right")
         ax[j][1].yaxis.tick_right()
@@ -291,7 +291,7 @@ def ones_varianceplot(T=300, pH=None, salttype='nom', samplesize=100,
         if pH == None:
             ax[i].set_xlabel('pH')
         elif T == None:
-            ax[i].set_xlabel('Temperature [K]')
+            ax[i].set_xlabel('Seawater temperature [K]')
 
         if save or show:
             _logy = np.log10(PS)

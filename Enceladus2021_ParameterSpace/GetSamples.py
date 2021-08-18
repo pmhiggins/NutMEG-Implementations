@@ -100,7 +100,7 @@ def varianceexample(samplesize):
 
     for a in ax[-1]:
         # bottom row
-        a.set_xlabel('Temperature [K]')
+        a.set_xlabel('Seawater temperature [K]')
 
     # ax[1][0] = all_varianceplot_pH(ax[1][0], 100, 300)
     # ax[1][1] = all_varianceplot_pH(ax[1][1], 100, 300, salttype='high')

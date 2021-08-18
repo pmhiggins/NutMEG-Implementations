@@ -9,8 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import EnceladusPlotStyles as EPS
 
-
-##### Needs titles, labels, ticks on colorbar, legend? sorted
+# This generates figure S5
 
 mpl.rcParams['xtick.labelsize'] = 13
 mpl.rcParams['ytick.labelsize'] = 13
@@ -42,14 +41,14 @@ cbaxes = fig.add_axes([0.58, 0.6, 0.3975, 0.05])
 fig.colorbar(contf, cax=cbaxes, ticks=[-160,-120,-80,-40,0,40,80], label='Free Energy of methanogenesis [kJ/mol]', orientation='horizontal', extend='both')
 
 
-axs[0][0].legend(bbox_to_anchor=(1.2, 0.8, 1.0, .102), loc=3,
+axs[0][0].legend(bbox_to_anchor=(1.2, 0.8, 1.0, .202), loc=3,
        ncol=1, mode="expand", borderaxespad=0.)
 
 for ax in axs:
     for a in ax:
         a.set_xlim(7,12)
         a.set_ylim(273.15,473)
-        a.set_ylabel('Temperature [K]')
+        a.set_ylabel('Seawater temperature [K]')
         a.set_xlabel('Bulk ocean pH')
 
 plt.savefig('freeenergysalts.pdf')

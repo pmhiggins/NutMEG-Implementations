@@ -202,7 +202,7 @@ def make_MGEContourPlot(CO2origin='pH', save='Energyplot.pdf', show=False, pHax=
         add_pH_boxes(ax, CDAINMS=False)
     ax.set_xlim(7,12)
     ax.set_xlabel('Bulk ocean pH (at 273 K)')
-    ax.set_ylabel('Temperature [K]')
+    ax.set_ylabel('Seawater temperature [K]')
     ax.set_ylim(273.15,473)
     ax.annotate("", xy=(9.4, 390), xytext=(9.1, 375), arrowprops=dict(headwidth=5, headlength=5, width=0.1, fc='k'))
     ax.annotate("", xy=(8.5, 345), xytext=(8.95, 367), arrowprops=dict(headwidth=5, headlength=5, width=0.1, fc='k'))
@@ -315,7 +315,7 @@ def make_PSContourPlot(CO2origin='pH', save='Powersupply.pdf', show=False, mesh=
 
     ax.set_xlim(6.75,12.25)
     ax.set_xlabel('Bulk ocean pH (at 273 K)')
-    ax.set_ylabel('Temperature [K]')
+    ax.set_ylabel('Seawater temperature [K]')
     ax.set_ylim(268.15,478)
     if Tline:
         ax.axhline(400, c='tab:orange', lw=9)
@@ -365,7 +365,7 @@ def PSunc_plot(CO2origin='HTHeating20', save='Powersupply_comp.pdf', show=False,
             ax.set_xlim(6.75,12.25)
 
             ax.set_xlabel('Bulk ocean pH (at 273 K)')
-            ax.set_ylabel('Temperature [K]')
+            ax.set_ylabel('Seawater temperature [K]')
             # ax.set_ylim(273.15,473)
             ax.set_ylim(268.15,478)
 
@@ -486,7 +486,7 @@ def PShabitabilityPlot(Trange = np.linspace(273,403, num=14), pHrange=np.linspac
             a.set_xlim(6.75, 12.25)
             a.set_ylim(268, 408)
             a.set_xlabel('Bulk ocean pH (at 273 K)')
-            a.set_ylabel('Temperature [K]')
+            a.set_ylabel('Seawater temperature [K]')
 
     plt.subplots_adjust(wspace=0.2, hspace=0.33, left=0.08, right=0.98, bottom=0.05, top=0.78)
 
