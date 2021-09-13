@@ -27,3 +27,5 @@ Then to run some code:
 **TOM** Code for examining the growth and biosignature behaviour of methanogens.  Outputs of this were used in the publication: 'A bioenergetic model to predict habitability, biomass and biosignatures in extreme conditions and astrobiolgy' Higgins & Cockell (2020) J. R. Soc. Interface [DOI](https://doi.org/10.1098/rsif.2020.0588)
 
 **Enceladus2021_ParameterSpace** Code for mapping the habitability of the parameter space of Enceladus' ocean.
+
+**Thesis** Some useful code to accompany my PhD thesis. 
