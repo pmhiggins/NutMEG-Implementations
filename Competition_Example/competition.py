@@ -11,7 +11,7 @@ results much, so just run the code again after getting the error and it wil be f
 # set std_dbpath to modelparams_draft
 
 import sys, os, ast
-sys.path.append(os.path.dirname(__file__)+'../../NutMEG/')
+# sys.path.append(os.path.dirname(__file__)+'../../NutMEG/') # no longer needed
 
 import NutMEG as nm
 import NutMEG.reaction as reaction
