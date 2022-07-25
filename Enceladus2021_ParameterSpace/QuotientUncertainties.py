@@ -66,8 +66,8 @@ def Q_salty_endmember(E, nATP, k_corr):
 
     QE = deepcopy(E)#nc(name='En', pH=ocean_pH, CO2origin='pH', T=T, workoutID=False)
 
-    CO2salt, H2Osalt = Enc.get_CO2_from_HTHeating(QE.env.T, QE.ocean_pH, salts=True)
-    CO2salt273, H2Osalt273 = Enc.get_CO2_from_HTHeating(273.15, QE.ocean_pH, salts=True)
+    CO2salt, H2Osalt = Enc.get_CO2_from_HTHeating(QE.env.T, QE.ocean_pH, salts=True)[:2]
+    CO2salt273, H2Osalt273 = Enc.get_CO2_from_HTHeating(273.15, QE.ocean_pH, salts=True)[:2]
 
     ######### Nominal parameters ##########
 
@@ -110,8 +110,8 @@ def get_salty_Enc(E, salttype, CO2unc=0.0, H2Ounc=0.0):
     """
     QE = deepcopy(E)#nc(name='En', pH=ocean_pH, CO2origin='pH', T=T, workoutID=False)
 
-    CO2salt, H2Osalt = Enc.get_CO2_from_HTHeating(QE.env.T, QE.ocean_pH, salts=True)
-    CO2salt273, H2Osalt273 = Enc.get_CO2_from_HTHeating(273.15, QE.ocean_pH, salts=True)
+    CO2salt, H2Osalt = Enc.get_CO2_from_HTHeating(QE.env.T, QE.ocean_pH, salts=True)[:2]
+    CO2salt273, H2Osalt273 = Enc.get_CO2_from_HTHeating(273.15, QE.ocean_pH, salts=True)[:2]
     aCO2, aH20, aH2, aCH4 = 0,0,0,0
     if salttype == 'nom':
         aCO2 = CO2salt[0]
