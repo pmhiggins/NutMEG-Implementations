@@ -35,5 +35,10 @@ Code for examining the growth and biosignature behaviour of methanogens.  Output
 ### Enceladus2021_ParameterSpace
 Code for mapping the habitability of the parameter space of Enceladus' ocean. Outputs of this were used in the publication: Higgins P.M.,  Glein C.R., and Cockell C.S. (2021) 'Instantaneous Habitable Windows in the Parameter Space of Enceladus' Ocean' *JGR: Planets* 126 (11) pp. e2021JE006951 DOI: [10.1029/2021JE006951](https://doi.org/10.1029/2021JE006951)
 
+### Enceladus2024_BiomassBiosinatures
+Code for analysing the sustainable steady state biomass and turnover of biotic carbon in Enceladus' ocean. 
+
+
+
 ### Thesis
 Some useful code to accompany my PhD thesis. Thesis published at the University of Edinburgh: Higgins, P.M. (2022) 'Modelling extraterrestrial habitability, biomass and biosignatures through the bioenergetic lens' *The University of Edinburgh* DOI: [10.7488/era/2078](https://doi.org/10.7488/era/2078 )
