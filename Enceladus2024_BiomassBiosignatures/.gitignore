@@ -1,3 +1,9 @@
-EBB/data/*
+EBB/data/*.zip
+EBB/data/biomass
+EBB/data/BMTO_means_CIs
+EBB/data/speciation
+
+
+
 EBB/SpeciationAnalyses/figures
 EBB/Biomass/Analysis/Plotting/Figures
