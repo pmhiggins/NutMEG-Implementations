@@ -11,7 +11,7 @@ results much, so just run the code again after getting the error and it wil be f
 # set std_dbpath to modelparams_draft
 
 import sys, os, ast
-sys.path.append(os.path.dirname(__file__)+'../../NutMEG/')
+sys.path.append(os.path.dirname(__file__)+'/../../NutMEG')
 # sys.path.append(os.path.dirname(__file__)+'../../NutMEG-testing/Thesis')
 
 import NutMEG as nm
@@ -50,7 +50,7 @@ def setup_methanogenesis(R, k_RTP=0.0001):
     CO2 = reaction.reagent('CO2(aq)', R.env, phase='aq')
     H2aq = reaction.reagent('H2(aq)', R.env, phase='aq')
     CH4aq = reaction.reagent('CH4(g)', R.env, phase='g')
-    H2O = reaction.reagent('H2O(l)', R.env, phase='l')
+    H2O = reaction.reagent('H2O(aq)', R.env, phase='l')
 
     # the overall reaction is CO2 + 4H2 -> CH4 + 2H2O
     thermalMG = reaction.reaction({CO2:1, H2aq:4}, {CH4aq:1, H2O:2},
@@ -68,10 +68,10 @@ def setup_sulfatereduction(R, k_RTP=0.0001):
     """
 
     H2aq = reaction.reagent('H2(aq)', R.env, phase='aq')
-    SO4 = reaction.reagent('SO4--', R.env, phase='aq', charge=-2)
+    SO4 = reaction.reagent('SO4-2', R.env, phase='aq', charge=-2)
     H = reaction.reagent('H+', R.env, phase='aq', charge=1)
     HS = reaction.reagent('HS-', R.env, phase='aq', charge=-1)
-    H2O = reaction.reagent('H2O(l)', R.env, phase='l')
+    H2O = reaction.reagent('H2O(aq)', R.env, phase='l')
 
     # the overall reaction is 4H2 + SO4(2-) + H(+) -> HS(-) + 4H2O
     thermalSR = reaction.reaction({H2aq:4, SO4:1, H:1}, {HS:1, H2O:4},
@@ -92,7 +92,7 @@ def initial_conditions(R, comp={}):
     mol_CO2 = comp.pop('CO2(aq)', 0.001)
     mol_CH4 = comp.pop('CH4(g)', 1e-7)
     mol_H2 =  comp.pop('H2(aq)', 0.001)
-    mol_SO4 = comp.pop('SO4--', 0.001)
+    mol_SO4 = comp.pop('SO4-2', 0.001)
     mol_HS = comp.pop('HS-', 1e-7)
 
     # life also needs a source of N and P
@@ -109,11 +109,11 @@ def initial_conditions(R, comp={}):
       activity=mol_H2)
     CH4aq = reaction.reagent('CH4(g)', R.env, phase='g', conc=mol_CH4,
       activity=mol_CH4)
-    H2O = reaction.reagent('H2O(l)', R.env, phase='l', conc=55.5,
+    H2O = reaction.reagent('H2O(aq)', R.env, phase='l', conc=55.5,
       activity=1, phase_ss=True)
     H = reaction.reagent('H+', R.env, charge=1, conc=mol_H,
       phase='aq', activity=mol_H)
-    SO4 = reaction.reagent('SO4--', R.env, phase='aq', charge=-2,
+    SO4 = reaction.reagent('SO4-2', R.env, phase='aq', charge=-2,
       conc=mol_SO4, activity= mol_SO4)
     HS = reaction.reagent('HS-', R.env, phase='aq', charge=-1, conc=mol_HS,
       activity=mol_HS)
@@ -228,7 +228,7 @@ def compcurves(orgfig, SimIDs, ax=None, ls='-'):
 
     TSeries = [] # times
     CO2, SO4, H2, H, CH4 = [],[],[],[], [] # list for some reagents
-    LSeries = ['CO2', 'SO4--', 'H2', 'H+', 'CH4']# list of labels for them
+    LSeries = ['CO2', 'SO4-2', 'H2', 'H+', 'CH4']# list of labels for them
     colSeries = ['b', 'r', 'g', 'c', 'k'] # colors for each line
     for S in SimIDs:
         T = nm.ecosystem_dbhelper.db_helper.extract_param_db_Sim(S, 'Time', dbpath=dbpath)
@@ -238,7 +238,7 @@ def compcurves(orgfig, SimIDs, ax=None, ls='-'):
         # turn these into lists for each reagent for easy plotting
         for c in comp:
             CO2.append(ast.literal_eval(c[0])['CO2(aq)'])
-            SO4.append(ast.literal_eval(c[0])['SO4--'])
+            SO4.append(ast.literal_eval(c[0])['SO4-2'])
             H2.append(ast.literal_eval(c[0])['H2(aq)'])
             H.append(ast.literal_eval(c[0])['H+'])
             CH4.append(ast.literal_eval(c[0])['CH4(g)'])
