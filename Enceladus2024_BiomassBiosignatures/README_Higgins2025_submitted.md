@@ -2,7 +2,7 @@ This directory contains the code used to produce and analyse the results in our 
 
 This code can replicate the isotope cycling models described in the manuscript. Some datasets or the bulk chemistry are from Higgins et al., (2024), JGR:Planets. The datasets for that work have been archived in figshare (doi: 10.6084/m9.figshare.22557706) and can be extracted and placed into the `data` directory.
 
-This code is designed to be used in the directory layout specified in the [main NutMEG-Implementations README](https://github.com/pmhiggins/NutMEG-Implementations/README.md). For best compatability, use the nm_v2 branch of NutMEG.
+This code is designed to be used in the directory layout specified in the [main NutMEG-Implementations README](https://github.com/pmhiggins/NutMEG-Implementations/README.md). For best compatability, use the nm_v2 branch of NutMEG. The only additional dependency of this code compared to NutMEG's dependencies is `sympy`, which can be installed via `pip`.
 
 - `IsotopeSpeciation/ChemicalIsotopeSpeciation.py` contains a class and methods for computing the carbonate isotope speciation, partitioning isotopes between CO2, HCO3 and CO3.
 
