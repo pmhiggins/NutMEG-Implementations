@@ -10,6 +10,11 @@ import pandas as pd
 
 
 class OceanAdvectiveSim:
+    """
+    Class for defining and performing a simple isotope-specific 1D ocean
+    transport model that considers advection, diffusion, and lateral loss
+    processes.
+    """
 
     def __init__(self, L_km, Q_kg_s, vfunc, v_b2t, Afunc, A_b2t, Atop, c_CO2_top, c_CH4_top, f_loss, f_loss_range, dir=''):
 
@@ -80,90 +85,6 @@ class OceanAdvectiveSim:
     @staticmethod
     def R_to_dC(R):
         return ((R/0.0112372)-1)*1000
-
-
-    def calc_frac_profile(self, R_CO2_out, R_CH4_out, dt_type='adv', save=False):
-
-        CO2 = C_1D(
-          C_1D.get_D_CO2(0., 0.01)* 100, # bulk D in dm3
-          -3.29, # epsilon for diffusion
-          'out', self.CO2_flux, self.c_CO2_top, self.f_loss,
-          transitprops={'v_func':self.vfunc, 'v_b2t':self.v_b2t, 'A_func':self.Afunc, 'A_b2t':self.A_b2t, 'A_top':self.Atop},
-          xprops = {'dx':0.01, 'L_km': self.L_km},
-          fluxprops = {'j_loss_xrange':self.f_loss_range})
-          # 0.0106753399
-
-
-        CH4 = C_1D(
-          C_1D.get_D_CH4(0.)* 100, # bulk D in dm3
-          -0.87, # epsilon for diffusion
-          'out', self.CH4_flux, self.c_CH4_top, self.f_loss,
-          transitprops={'v_func':self.vfunc, 'v_b2t':self.v_b2t, 'A_func':self.Afunc, 'A_b2t':self.A_b2t, 'A_top':self.Atop},
-          xprops = {'dx':0.01, 'L_km': self.L_km},
-          fluxprops = {'j_loss_xrange':self.f_loss_range})
-
-        C_CO2_init = CO2.guess_C_profile_advective()
-        C_CO2_l_results = []
-        C_CO2_h_results = []
-
-        C_CH4_init = CH4.guess_C_profile_advective()
-        C_CH4_l_results = []
-        C_CH4_h_results = []
-
-        max_D = max(CO2.D_bulk, CO2.D_heavy, CH4.D_bulk, CH4.D_heavy)
-
-        dt = None
-        if dt_type == 'default':
-            # vs[0] will always be the largest velocity
-            dt = (CO2.xprops['dx_dm']**2) / (CO2.vs[0]*CO2.xprops['dx_dm']+ 2*(max_D))
-        elif dt_type == 'adv':
-            dt = CO2.xprops['L_dm'] / CO2.vs[0]
-        else:
-            raise ValueError('unknown dt_type!')
-
-        ### CO2
-        C_CO2_init = CO2.guess_C_profile_advective()
-        C_CO2_h_init = deepcopy(C_CO2_init)*R_CO2_out
-
-        CO2.reset_default_fluxes(R=1.)
-        C_CO2_l_SS = CO2.integrate_depth_diff_only(C_CO2_init, restype='fin', dt=dt)
-        C_CO2_l_results = C_CO2_l_SS
-
-        CO2props = {'J_in' : CO2.fluxprops['J_in'],
-          'J_out' : CO2.fluxprops['J_out'],
-          'c_out' :  C_CO2_l_SS[-1],
-          'c_in' :  C_CO2_l_SS[0]}
-
-        CO2.reset_default_fluxes(R=R_CO2_out)
-        C_CO2_h_SS = CO2.integrate_depth_diff_only(C_CO2_h_init, D=CO2.D_heavy, restype='fin', dt=dt)
-        C_CO2_h_results = C_CO2_h_SS
-
-        CO2props['R_out'] =  C_CO2_h_SS[-1]/C_CO2_l_SS[-1]
-        CO2props['R_in'] =  C_CO2_h_SS[0]/C_CO2_l_SS[0]
-
-
-        ### CH4
-        C_CH4_init = CH4.guess_C_profile_advective()
-        C_CH4_h_init = deepcopy(C_CH4_init)*R_CH4_out
-
-        CH4.reset_default_fluxes()
-        C_CH4_l_SS = CH4.integrate_depth_diff_only(C_CH4_init, restype='fin', dt=dt)
-        C_CH4_l_results = C_CH4_l_SS
-
-        CH4props = {'J_in' : CH4.fluxprops['J_in'],
-          'J_out' : CH4.fluxprops['J_out'],
-          'c_out' :  C_CH4_l_SS[-1],
-          'c_in' :  C_CH4_l_SS[0]
-        }
-
-        CH4.reset_default_fluxes(R=R_CH4_out)
-        C_CH4_h_SS = CH4.integrate_depth_diff_only(C_CH4_h_init, D=CH4.D_heavy, restype='fin', dt=dt)
-        C_CH4_h_results = C_CH4_h_SS
-
-        CH4props['R_out'] =  C_CH4_h_SS[-1]/C_CH4_l_SS[-1]
-        CH4props['R_in'] =  C_CH4_h_SS[0]/C_CH4_l_SS[0]
-
-        return CO2props, CH4props
 
 
 
@@ -255,15 +176,6 @@ class OceanAdvectiveSim:
         return this_df
 
 
-    def plot_conc_profile(self, ax, species, _type='bulk'):
-
-        C_df = pd.read_csv(self.profile_fn)
-
-        ax.plot(C_df['x'], C_df[species+'_'+_type+'_start'], label='init.')
-        ax.plot(C_df['x'], C_df[species+'_'+_type+'_end_default_dt'], label='default_dt')
-        ax.plot(C_df['x'], C_df[species+'_'+_type+'_end_adv_dt'], label='conservative dt')
-
-        return ax
 
     def get_DdC(self, species, dt_types=['default_dt', 'adv_dt'], df=None):
 
@@ -303,8 +215,8 @@ def Advective_iterate(fn='AdvectiveParameterSpace'):
     dir = os.path.dirname(__file__)+'/../../data/OceanTransport/'
 
 
-    Area_top_big = 100*10. * 500*10000. # 100 m x 500 km; in dm. # from N+I
-    Area_top_small = 1*10. * 100*10000. # 1 m x 100 km; in dm. Not from N+I - check + repeat
+    Area_top_big = 100*10. * 500*10000. # 100 m x 500 km; in dm. # from N+I 2016
+    Area_top_small = 1*10. * 100*10000. # 1 m x 100 km; in dm. hypothetical minimum
 
     iterables = {'Area_funcs':['Area_lateral', 'Area_const'],
       'Area_top':[Area_top_big, (Area_top_big + Area_top_small) / 2, Area_top_small],
@@ -383,55 +295,8 @@ def Advective_iterate(fn='AdvectiveParameterSpace'):
     pspace.to_csv(dir+fn+'-summary.csv')
 
 
-def Pe_vs_f_loss_contours(fn='AdvectiveParameterSpace', vmin=-4, vmax=0.):
 
-    dir = os.path.dirname(__file__)+'/../../data/OceanTransport/'
-    df = pd.read_csv(dir+fn+'-summary.csv')
-
-    df['log(vt)'] = np.log10(df['J_top_H2O']/(df['Area_top']))
-    df['log(Pe)'] = np.log10(10000 * df['L']) + df['log(vt)'] - np.log10(C_1D.get_D_CO2(0.,0.01)*100)
-
-    fig, axs = plt.subplots(ncols=2,nrows=2, figsize=(8,8))
-    # axs = axs.flatten()
-    this_axs = 0
-    cont=None
-
-    yparam = 'log(Pe)'
-    xparam = 'f_loss'
-    combo = [xparam, yparam]
-
-    for i, species in enumerate(['CO2', 'CH4']):
-        for j, dt in enumerate(['adv_dt', 'default_dt']):
-
-            grouped = df.groupby(combo)['DdC (bottom-top) '+species+' '+dt].apply(list)  # Group delta_C values
-
-            x,y,z = [],[],[]
-            for group, values in grouped.items():
-                x.append(group[0])
-                y.append(group[1])
-                z.append(np.nanmax(np.abs(values))+1e-50)
-            # axs[j+i-1][i].scatter(df2[_p1], df2[_p2], c=df2['DdC'], s=200, cmap='viridis', vmin=0, vmax=5.)
-            levels = np.linspace(vmin, vmax,num=21)
-            print(np.log10(z))
-            cont = axs[i][j].tricontourf(x,y,np.log10(z), levels=levels, cmap='viridis', vmin=vmin, vmax=vmax, extend='both')
-            # axs[j+i-1][i].scatter(df2[_p1], df2[_p2], c='c', s=200)
-            # axs[j+i-1][i].scatter(x,y, marker='x', c='w')
-            axs[i][j].set_ylabel(yparam)
-            axs[i][j].set_xlabel(xparam)
-            axs[i][j].set_title(species+'; '+dt)
-
-    plt.tight_layout()
-    fig.subplots_adjust(bottom=0.25)
-    cax = fig.add_axes([0.1, 0.1, 0.9, 0.05])
-    fig.colorbar(cont, cax=cax, orientation='horizontal')
-    cax.set_xlabel(r'log$_{10}$ - maximum $\Delta \delta$ C')
-
-    plt.savefig('Pe_vs_f_loss_contours.png')
-    plt.close()
-
-
-
-def Pe_vs_f_loss_contours_default(fn='AdvectiveParameterSpace', vmin=-3, vmax=0.):
+def Pe_vs_f_loss_contours(fn='AdvectiveParameterSpace', vmin=-3, vmax=0.):
 
     dir = os.path.dirname(__file__)+'/../../data/OceanTransport/'
     df = pd.read_csv(dir+fn+'-summary.csv')
@@ -488,4 +353,3 @@ def Pe_vs_f_loss_contours_default(fn='AdvectiveParameterSpace', vmin=-3, vmax=0.
 
 Advective_iterate()
 Pe_vs_f_loss_contours()
-Pe_vs_f_loss_contours_default()
