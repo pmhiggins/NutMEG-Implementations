@@ -5,3 +5,4 @@ from .ChemicalSpeciation.EncSpecRetriever import EncSpecRetriever as EncSpecRetr
 from .DataFrameFetcher import DataFrameFetcher
 from .EnceladusFetcher import EnceladusFetcher
 from .TOMFetcher import TOMFetcher
+from .IsotopeConversions import IsotopeConversions

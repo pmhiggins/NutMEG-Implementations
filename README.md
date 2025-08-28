@@ -36,8 +36,8 @@ Code for examining the growth and biosignature behaviour of methanogens.  Output
 Code for mapping the habitability of the parameter space of Enceladus' ocean. Outputs of this were used in the publication: Higgins P.M.,  Glein C.R., and Cockell C.S. (2021) 'Instantaneous Habitable Windows in the Parameter Space of Enceladus' Ocean' *JGR: Planets* 126 (11) pp. e2021JE006951 DOI: [10.1029/2021JE006951](https://doi.org/10.1029/2021JE006951)
 
 ### Enceladus2024_BiomassBiosinatures
-Code for analysing the sustainable steady state biomass and turnover of biotic carbon in Enceladus' ocean. 
-
+- Code for analysing the sustainable steady state biomass and turnover of biotic carbon in Enceladus' ocean used in the publication Higgins et al., (2024) 'Quantifying uncertainty in biomass and production of biotic carbon in Enceladus' notional methanogenic biosphere' *JGR: Planets* 129 (3) pp. e2023JE008166 DOI: [10.1029/2021JE006951](https://doi.org/10.1029/2023JE008166)
+- Code for modelling isotope cycling that owes to abiotic processes on Enceladus (the abiotic baseline) and possible biotic contributions above that baseline. Used in the manuscript Higgins et al., (submitted) 'Potential for carbon isotope biosignatures above the abiotic baseline on Enceladus'
 
 
 ### Thesis

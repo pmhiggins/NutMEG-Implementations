@@ -17,14 +17,14 @@ class EnceladusFetcher:
         # this dict translates Enc reagents to their keys in the speciation dataframe
         # we don't need to put in everything from the speciation.
         self.species_amendments = {
-          'H2O(l)' : 'H2O',
+          'H2O(aq)' : 'H2O',
           'H+' : 'H+',
           'OH-' : 'OH-',
           'Na+' : 'Na+',
           'Cl-' : 'Cl-',
           'HCO3-' : 'HCO3-',
           'CO2(aq)' : 'CO2(aq)',
-          'CO3--' : 'CO3-2'
+          'CO3-2' : 'CO3-2'
           }
 
     def add_species_amendments(self, extra_species):
@@ -51,14 +51,14 @@ class EnceladusFetcher:
 
         for k,v in _specs.items():
             try:
-                g = float(_df['g'+v])
+                g = float(_df['g'+v].iloc[0])
                 rtr.composition[k].gamma = _df['g'+v]
 
-                if k == 'H2O(l)':
-                    a = float(_df['a'+v])
+                if k == 'H2O(aq)':
+                    a = float(_df['a'+v].iloc[0])
                     rtr.composition[k].activity = a
                 else:
-                    m = float(_df['m'+v])
+                    m = float(_df['m'+v].iloc[0])
                     rtr.composition[k].activity = g*m
 
                     # set both conc and molal to the same value, with molal act. coeff.
@@ -68,12 +68,12 @@ class EnceladusFetcher:
                     rtr.composition[k].molal = m
             except KeyError:
                 # the species is not present in the reactor yet
-                g = float(_df['g'+v])
-                m = float(_df['m'+v])
+                g = float(_df['g'+v].iloc[0])
+                m = float(_df['m'+v].iloc[0])
                 rct = nm.reaction.reagent(k, rtr.env, phase='aq',
                   conc=m, activity=m*g, molal=m, gamma=g)
                 rtr.add_reagent(rct)
-        rtr.DIC = rtr.composition['HCO3-'].molal + rtr.composition['CO2(aq)'].molal + rtr.composition['CO3--'].molal
+        rtr.DIC = rtr.composition['HCO3-'].molal + rtr.composition['CO2(aq)'].molal + rtr.composition['CO3-2'].molal
         return rtr
 
 
@@ -200,7 +200,7 @@ class EnceladusFetcher:
             # for use in getting bulk ocean dissolved gas concentrations
             DFF.Ts = [273.15]
             df = DFF.spec()
-            CO2_bo = float(df['mCO2(aq)'])
+            CO2_bo = float(df['mCO2(aq)'].iloc[0])
             # we can leave the saltlevel as None here, because we are using
             # CO2_bo as the basis for gas concentrations
             _Enc = self.update_gases(_Enc, how=gases,

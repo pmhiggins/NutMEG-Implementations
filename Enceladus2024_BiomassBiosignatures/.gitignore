@@ -1,7 +1,9 @@
 EBB/data/*.zip
 EBB/data/biomass
 EBB/data/BMTO_means_CIs
-EBB/data/speciation
+EBB/data/speciation/spec_T_273-473_pH_7-12
+EBB/data/speciation/spec_T_273-473_pH_8-9
+EBB/data/OceanTransport/AdvectiveParameterSpace-summary.csv
 
 
 
