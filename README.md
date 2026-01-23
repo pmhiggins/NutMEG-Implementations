@@ -1,7 +1,9 @@
 # NutMEG-Implementations
-Repository for example or published codes using NutMEG.
+Repository for example or published codes using [NutMEG](http://github.com/pmhiggins/NutMEG).
 
-These should be designed such that one can clone NutMEG-Implementations and position it in the same directory as their NutMEG clone. All code in NutMEG-Implementations appends the NutMEG directory to sys.path by default, so if you structure your projects differently you'll need to change it accordingly.
+**Note:** Not all Implementations have been updated to work with NutMEG v2.0, which is currently in development. We encourage users to use the appropriate NutMEG version as identified in the published manuscripts until v2.0 releases.
+
+These are designed such that one can clone NutMEG-Implementations and position it in the same directory as their NutMEG clone. All code in NutMEG-Implementations appends the NutMEG directory to sys.path by default, so if you structure your projects differently you'll need to change it accordingly.
 
 Example structure:
 
@@ -35,9 +37,10 @@ Code for examining the growth and biosignature behaviour of methanogens.  Output
 ### Enceladus2021_ParameterSpace
 Code for mapping the habitability of the parameter space of Enceladus' ocean. Outputs of this were used in the publication: Higgins P.M.,  Glein C.R., and Cockell C.S. (2021) 'Instantaneous Habitable Windows in the Parameter Space of Enceladus' Ocean' *JGR: Planets* 126 (11) pp. e2021JE006951 DOI: [10.1029/2021JE006951](https://doi.org/10.1029/2021JE006951)
 
-### Enceladus2024_BiomassBiosinatures
+### Enceladus2024_BiomassBiosignatures
 - Code for analysing the sustainable steady state biomass and turnover of biotic carbon in Enceladus' ocean used in the publication Higgins et al., (2024) 'Quantifying uncertainty in biomass and production of biotic carbon in Enceladus' notional methanogenic biosphere' *JGR: Planets* 129 (3) pp. e2023JE008166 DOI: [10.1029/2021JE006951](https://doi.org/10.1029/2023JE008166)
-- Code for modelling isotope cycling that owes to abiotic processes on Enceladus (the abiotic baseline) and possible biotic contributions above that baseline. Used in the manuscript Higgins et al., (submitted) 'Potential for carbon isotope biosignatures above the abiotic baseline on Enceladus'
+- Code for modelling isotope and enantiomeric cycling that owes to abiotic processes on Enceladus (the abiotic baseline) and possible biotic contributions above that baseline. Used in the manuscript Higgins et al., (submitted) 'A framework for evaluating biosignature potential
+against the abiotic baseline on ocean worlds'. **This implementation uses an early build of NutMEG v2. Please use the version of NutMEG [here](https://github.com/pmhiggins/NutMEG/tree/2742434ceb64f7bd47d7eb32a0a7f9a217b25bef)**. Please refer to the [specific README](https://github.com/pmhiggins/NutMEG-Implementations/blob/IsotopeCycling/Enceladus2024_BiomassBiosignatures/README_Higgins2025_submitted.md) for more information.
 
 
 ### Thesis
