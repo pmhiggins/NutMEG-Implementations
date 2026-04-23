@@ -13,7 +13,7 @@ mpl.rcParams['lines.linewidth'] = 3
 
 
 
-cmap = plt.get_cmap('tab10', 10)
+cmap = plt.get_cmap('tab20', 20)
 
 D_CO2_l = C_1D.get_D_CO2(0., 0.01)
 D_CO2_h = C_1D.get_D13(D_CO2_l, -0.87) # -0.87 is the epsilon for CO2 diffusion
@@ -61,18 +61,18 @@ for L in Ls:
     t_range = t_tilde_range*t_diff/ (3600*24*365)
 
     print(D_CO2_l)
-    axs[0].plot(t_range  / (L**2), C_tilde_CO2_l, label=r'CO$_2$; $D_l=5.85\times10^{-10}$ m$^{2}$s$^{-1}$', c=cmap(1))
-    axs[0].plot(t_range  / (L**2), C_tilde_CH4_l, label=r'CH$_4$; $D_l = 8.75\times10^{-10}$ m$^{2}$s$^{-1}$', c=cmap(4))
-    axs[0].plot(t_range  / (L**2), C_tilde_turbulent, label=r'Turbulent $D_e=1\times10^{-4}$ m$^{2}$s$^{-1}$', c=cmap(6))
+    axs[0].plot(t_range  / (L**2), C_tilde_CO2_l, label=r'CO$_2$; $D_l=5.85\times10^{-10}$ m$^{2}$s$^{-1}$', c=cmap(2), alpha=0.8)
+    axs[0].plot(t_range  / (L**2), C_tilde_CH4_l, label=r'CH$_4$; $D_l = 8.75\times10^{-10}$ m$^{2}$s$^{-1}$', c=cmap(8))
+    axs[0].plot(t_range  / (L**2), C_tilde_turbulent, label=r'Turbulent $D_e=1\times10^{-4}$ m$^{2}$s$^{-1}$', c=cmap(13))
 
     axs[0].set_ylabel(r"Molality at $x_3$ / Molality at $x_2$") # ; $\tilde{C}_{x_{4}}
     axs[0].set_xlabel(r"Time / $(L_2)^2$ [yr m$^{-2}$]")
 
-    axs[1].plot(t_range / (L**2), 1000 * abs((C_tilde_CO2_h / C_tilde_CO2_l) - 1), label=r'CO$_2$ molecular diffusion;'+'\n'+r'$D_{CO2, l}=5.85\times10^{-10}$ m$^{2}$s$^{-1}$', c=cmap(1))
-    axs[1].plot(t_range / (L**2), 1000 * abs((C_tilde_CH4_h / C_tilde_CH4_l) - 1), label=r'CH$_4$ molecular diffusion;'+'\n'+r'$D_{CH4, l}=8.75\times10^{-10}$ m$^{2}$s$^{-1}$', c=cmap(4))
+    axs[1].plot(t_range / (L**2), 1000 * abs((C_tilde_CO2_h / C_tilde_CO2_l) - 1), label=r'CO$_2$ molecular diffusion;'+'\n'+r'$D_{CO2, l}=5.85\times10^{-10}$ m$^{2}$s$^{-1}$', c=cmap(2), alpha=0.8)
+    axs[1].plot(t_range / (L**2), 1000 * abs((C_tilde_CH4_h / C_tilde_CH4_l) - 1), label=r'CH$_4$ molecular diffusion;'+'\n'+r'$D_{CH4, l}=8.75\times10^{-10}$ m$^{2}$s$^{-1}$', c=cmap(8))
 
-    axs[1].plot(t_range / (L**2), 1000 * abs((C_tilde_turbulent_CO2_h / C_tilde_turbulent_CO2_l) - 1), label=r'Turbulent diffusion +'+'\n'+'CO$_{2}$ molecular diffusion;'+'\n'+'$D_t + D_{CO2, j}$', c=cmap(6))
-    axs[1].plot(t_range / (L**2), 1000 * abs((C_tilde_turbulent_CH4_h / C_tilde_turbulent_CH4_l) - 1), label=r'Turbulent diffusion +'+'\n'+'CH$_{4}$ molecular diffusion;'+'\n'+'$D_t + D_{CH4, j}$', c=cmap(6), ls='dashed')
+    axs[1].plot(t_range / (L**2), 1000 * abs((C_tilde_turbulent_CO2_h / C_tilde_turbulent_CO2_l) - 1), label=r'Turbulent diffusion +'+'\n'+'CO$_{2}$ molecular diffusion;'+'\n'+'$D_t + D_{CO2, j}$', c=cmap(13))
+    axs[1].plot(t_range / (L**2), 1000 * abs((C_tilde_turbulent_CH4_h / C_tilde_turbulent_CH4_l) - 1), label=r'Turbulent diffusion +'+'\n'+'CH$_{4}$ molecular diffusion;'+'\n'+'$D_t + D_{CH4, j}$', c=cmap(13), ls='dashed')
 
     axs[1].set_ylabel(r"Approximate $-\Delta\delta$C$_{x2/x3}$ $[\perthousand]$")
     axs[1].set_xlabel(r"Time / $(L_2)^2$ [yr m$^{-2}$]")
@@ -86,7 +86,7 @@ for ax in axs:
 
 
 axs[1].set_yscale('log')
-axs[1].axhline(1., c='slategray', ls='dotted', lw=3)
+axs[1].axhline(1., c='slategray', lw=3, alpha=0.5)
 
 plt.tight_layout()
 plt.subplots_adjust(right=0.65)
@@ -123,24 +123,24 @@ t_90_CH4_h = get_t(1., 0.9, L=Ls, D=D_CH4_h)
 
 t_90_turbulent = get_t(1., 0.9, L=Ls, D=D_turbulent)
 
-axs[0].plot(Ls, t_10_CO2_l/(3600*24*365), label=r'CO$_2$ molecular diffusion;'+'\n'+r'$\tilde{C}_{x3}=0.1$', c=cmap(1))
-axs[0].plot(Ls, t_10_CH4_l/(3600*24*365), label=r'CH$_4$ molecular diffusion;'+'\n'+r'$\tilde{C}_{x3}=0.1$', c=cmap(4))
-axs[0].plot(Ls, t_10_turbulent/(3600*24*365), label=r'Turbulent diffusion only;'+'\n'+r'$\tilde{C}_{x3}=0.1$', c=cmap(6))
+axs[0].plot(Ls, t_10_CO2_l/(3600*24*365), label=r'CO$_2$ molecular diffusion;'+'\n'+r'$\tilde{C}_{x3}=0.1$', c=cmap(2), alpha=0.8)
+axs[0].plot(Ls, t_10_CH4_l/(3600*24*365), label=r'CH$_4$ molecular diffusion;'+'\n'+r'$\tilde{C}_{x3}=0.1$', c=cmap(8))
+axs[0].plot(Ls, t_10_turbulent/(3600*24*365), label=r'Turbulent diffusion only;'+'\n'+r'$\tilde{C}_{x3}=0.1$', c=cmap(13))
 
 
-axs[0].plot(Ls, t_90_CO2_l/(3600*24*365), label=r'CO$_2$ molecular diffusion;'+'\n'+r'$\tilde{C}_{x3}=0.9$', c=cmap(1), ls='dashed')
-axs[0].plot(Ls, t_90_CH4_l/(3600*24*365), label=r'CH$_{4}$ molecular diffusion;'+'\n'+r'$\tilde{C}_{x3}=0.9$', c=cmap(4), ls='dashed')
-axs[0].plot(Ls, t_90_turbulent/(3600*24*365), label=r'Turbulent diffusion only;'+'\n'+r'$\tilde{C}_{x3}=0.9$', c=cmap(6), ls='dashed')
+axs[0].plot(Ls, t_90_CO2_l/(3600*24*365), label=r'CO$_2$ molecular diffusion;'+'\n'+r'$\tilde{C}_{x3}=0.9$', c=cmap(2), ls='dashed', alpha=0.8)
+axs[0].plot(Ls, t_90_CH4_l/(3600*24*365), label=r'CH$_{4}$ molecular diffusion;'+'\n'+r'$\tilde{C}_{x3}=0.9$', c=cmap(8), ls='dashed')
+axs[0].plot(Ls, t_90_turbulent/(3600*24*365), label=r'Turbulent diffusion only;'+'\n'+r'$\tilde{C}_{x3}=0.9$', c=cmap(13), ls='dashed')
 
 
 axs[0].set_ylabel(r'Time required to reach $\tilde{C}_{x3}$ threshold [yr]')
 axs[0].set_xlabel(r'Depth of diffusive layer $L_2=x_3 - x_2$ [m]')
 
 
-axs[1].plot(Ls, 1000 * abs((get_C_tilde(1.0, 1.0, L=Ls, D=D_CO2_h, t_ref=t_10_CO2_l) / get_C_tilde(1.0, 1.0, L=Ls, D=D_CO2_l, t_ref=t_10_CO2_l)) - 1), label=r'CO$_2$, $\tilde{C}^{L}=0.1$', c=cmap(1))
-axs[1].plot(Ls, 1000 * abs((get_C_tilde(1.0, 1.0, L=Ls, D=D_CH4_h, t_ref=t_10_CO2_l) / get_C_tilde(1.0, 1.0, L=Ls, D=D_CH4_l, t_ref=t_10_CO2_l)) - 1), label=r'CH$_4$, $\tilde{C}^{L}=0.1$', c=cmap(4))
-axs[1].plot(Ls, 1000 * abs((get_C_tilde(1.0, 1.0, L=Ls, D=D_CO2_h, t_ref=t_90_CO2_l) / get_C_tilde(1.0, 1.0, L=Ls, D=D_CO2_l, t_ref=t_90_CO2_l)) - 1), label=r'CO$_2$, $\tilde{C}^{L}=0.9$', c=cmap(1), ls='dashed')
-axs[1].plot(Ls, 1000 * abs((get_C_tilde(1.0, 1.0, L=Ls, D=D_CH4_h, t_ref=t_90_CO2_l) / get_C_tilde(1.0, 1.0, L=Ls, D=D_CH4_l, t_ref=t_90_CO2_l)) - 1), label=r'CH$_4$, $\tilde{C}^{L}=0.9$', c=cmap(4), ls='dashed')
+axs[1].plot(Ls, 1000 * abs((get_C_tilde(1.0, 1.0, L=Ls, D=D_CO2_h, t_ref=t_10_CO2_l) / get_C_tilde(1.0, 1.0, L=Ls, D=D_CO2_l, t_ref=t_10_CO2_l)) - 1), label=r'CO$_2$, $\tilde{C}^{L}=0.1$', c=cmap(2), alpha=0.8)
+axs[1].plot(Ls, 1000 * abs((get_C_tilde(1.0, 1.0, L=Ls, D=D_CH4_h, t_ref=t_10_CO2_l) / get_C_tilde(1.0, 1.0, L=Ls, D=D_CH4_l, t_ref=t_10_CO2_l)) - 1), label=r'CH$_4$, $\tilde{C}^{L}=0.1$', c=cmap(8))
+axs[1].plot(Ls, 1000 * abs((get_C_tilde(1.0, 1.0, L=Ls, D=D_CO2_h, t_ref=t_90_CO2_l) / get_C_tilde(1.0, 1.0, L=Ls, D=D_CO2_l, t_ref=t_90_CO2_l)) - 1), label=r'CO$_2$, $\tilde{C}^{L}=0.9$', c=cmap(2), ls='dashed', alpha=0.8)
+axs[1].plot(Ls, 1000 * abs((get_C_tilde(1.0, 1.0, L=Ls, D=D_CH4_h, t_ref=t_90_CO2_l) / get_C_tilde(1.0, 1.0, L=Ls, D=D_CH4_l, t_ref=t_90_CO2_l)) - 1), label=r'CH$_4$, $\tilde{C}^{L}=0.9$', c=cmap(8), ls='dashed')
 
 axs[1].yaxis.set_label_position("right")
 axs[1].yaxis.tick_right()

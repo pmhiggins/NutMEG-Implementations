@@ -93,7 +93,13 @@ class ChiralPlotter:
                     t_f = tr_g[np.argmax(CT.DL_to_Lf(Ratio_g)<=L_thres)]
                     t_fs.append(t_f)
 
-                axs[0].plot(f_bios, CT.s_to_yr(np.array(t_fs)), c=c, ls=ls, label=lbl)
+                yvs = CT.s_to_yr(np.array(t_fs))
+                minS = yvs[0]
+                for i, yv in enumerate(yvs):
+                    if yv == minS:
+                        yvs[i]=1e-50
+
+                axs[0].plot(f_bios, yvs, c=c, ls=ls, label=lbl)
 
         axs[0].set_yscale('log')
         axs[0].set_ylim(1e-1, 1e9)
@@ -113,6 +119,8 @@ class ChiralPlotter:
 
         plt.close()
 
-
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = ['dejavusans']
+plt.rcParams['mathtext.fontset'] = 'dejavusans'
 ChiralPlotter.ChiralChange_with_abio_component(T=273)
 ChiralPlotter.ChiralChange_with_abio_component(T=333)

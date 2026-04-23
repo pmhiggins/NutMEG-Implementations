@@ -6,13 +6,22 @@ import numpy as np
 import math
 from ChiralTools import ChiralTools as CT
 
+plt.rcParams['axes.linewidth'] = 2
+plt.rcParams['font.size'] = 7
+plt.rcParams['xtick.labelsize'] = 7
+plt.rcParams['ytick.labelsize'] = 7
+plt.rcParams['lines.markersize'] = 3
+plt.rcParams['lines.linewidth'] =2.
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = ['Helvetica']
+plt.rcParams['mathtext.fontset'] = 'dejavusans'
 
 plt.rcParams['errorbar.capsize'] = 8
 plt.rcParams['lines.linewidth'] = 4
 ls = ['dashed', '-', 'dotted']
 
 
-fig, ax = plt.subplots(figsize=(7,4), nrows=1)
+fig, ax = plt.subplots(figsize=(5.5,2.5), nrows=1)
 axs = [ax]
 for ax in axs:
     ax.set_xlim(1,9)
@@ -58,7 +67,9 @@ for k,v in vert_dict.items():
         ax.plot([x[i],x[i+1]], [y[i],y[i+1]], c=cm(norm_these_ts[i]), ls=v['ls'])
 
 
-    ax.hlines(100, xmin=k-0.3, xmax=k+0.3, color=cm(norm_these_ts[0]))
+    # ax.hlines(100, xmin=k-0.3, xmax=k+0.3, color=cm(norm_these_ts[0]))
+    ax.scatter([k], 100, color=cm(norm_these_ts[0]), marker='D', s=40., edgecolors='k', zorder=10)
+
     ax.text(k, 102, r'<10$^{'+str(round(math.log10(these_ts[0]), 1))+'}$ yr', ha='center', va='bottom')
     ax.arrow(k, 53, 0, -0.1,  # Start at (2,4), extends 1 unit in x and 2 in y
           head_width=0.5, head_length=3, overhang=0.8,
@@ -68,14 +79,15 @@ for k,v in vert_dict.items():
 ax.axhline(50, c='k', ls='dotted')
 
 for _ax in axs:
-    _ax.axvline(3, c='k')
-    _ax.axvline(5, c='k')
-    _ax.axvline(7, c='k')
+    _ax.axvline(3, c='k', lw=2)
+    _ax.axvline(5, c='k', lw=2)
+    _ax.axvline(7, c='k', lw=2)
 
     _ax.tick_params(axis='x', bottom=False, labelbottom=False)
 
 
-ax.set_ylabel(r'$L$-form %')
+ax.set_ylabel(r'Biotic amino acid $L$-form %')
+ax.set_yticks([50,60,70,80,90,100])
 
 sm = plt.cm.ScalarMappable(cmap=_map, norm=norm)
 plt.subplots_adjust(left=0.15, right=0.8, bottom=0.1, top=0.9)

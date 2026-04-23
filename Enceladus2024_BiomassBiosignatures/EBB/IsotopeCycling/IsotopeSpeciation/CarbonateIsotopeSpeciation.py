@@ -211,20 +211,20 @@ def CIS_plot(stdout=False):
                 HCO3s.append(ICtools.RtodC(CIS.R_HCO3_T))
                 DICs.append(ICtools.RtodC(CIS.R_DIC))
 
-            ax.plot(Tvals-273.15, DICs, ls='dotted', c=cmap(i))
+            # ax.plot(Tvals-273.15, DICs, ls='dotted', c=cmap(i))
             ax.plot(Tvals-273.15, CO2s, c=cmap(i))
             ax.plot(Tvals-273.15, HCO3s, ls='dashed', c=cmap(i))
-            ax.plot(Tvals-273.15, CO3s, ls='dashdot', c=cmap(i))
+            ax.plot(Tvals-273.15, CO3s, ls='dotted', c=cmap(i))
 
         ax.set_xlabel(r'Temperature [$\degree$C]')
         ax.set_ylabel(r'$\delta^{13}$C [$\perthousand$]')
         ax.text(110, 60.5, r'pH at 0$\degree$C: '+str(pH), va='bottom', ha='right')
         ax.set_xlim(0,120)
 
-    DICaxs[-1].plot(np.nan, np.nan, ls='dotted', c='k', label='$\delta^{13}$C$_{\mathregular{DIC}}$')
+    # DICaxs[-1].plot(np.nan, np.nan, ls='dotted', c='k', label='$\delta^{13}$C$_{\mathregular{DIC}}$')
     DICaxs[-1].plot(np.nan, np.nan, c='k', label='$\delta^{13}$C$_{\mathregular{CO2}}$')
     DICaxs[-1].plot(np.nan, np.nan, ls='dashed', c='k', label='$\delta^{13}$C$_{\mathregular{HCO3}}$')
-    DICaxs[-1].plot(np.nan, np.nan, ls='dashdot', c='k', label='$\delta^{13}$C$_{\mathregular{CO3}}$')
+    DICaxs[-1].plot(np.nan, np.nan, ls='dotted', c='k', label='$\delta^{13}$C$_{\mathregular{CO3}}$')
 
     DICfig.subplots_adjust(top=0.982, bottom=0.2, left=0.091, right=0.978)
 
@@ -242,4 +242,4 @@ def CIS_plot(stdout=False):
 
     plt.close()
 
-# CIS_plot(stdout=True)
+CIS_plot(stdout=True)

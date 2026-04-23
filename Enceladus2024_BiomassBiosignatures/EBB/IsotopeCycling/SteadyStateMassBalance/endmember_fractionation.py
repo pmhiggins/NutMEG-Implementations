@@ -9,6 +9,15 @@ from itertools import chain
 from SSMBtest import SimpleMethaneBox
 
 
+plt.rcParams['font.size'] = 7
+plt.rcParams['xtick.labelsize'] = 7
+plt.rcParams['ytick.labelsize'] = 7
+plt.rcParams['lines.markersize'] = 3
+plt.rcParams['lines.linewidth'] =2.
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = ['Helvetica']
+plt.rcParams['mathtext.fontset'] = 'dejavusans'
+
 plt.rcParams['errorbar.capsize'] = 8
 plt.rcParams['lines.linewidth'] = 3
 ls = ['dashed', '-', 'dotted']
@@ -43,7 +52,7 @@ def DdC_CH4_x1_x4(dC_CH4_sf):
     return (dC_CH4_sf - 4 - 1, dC_CH4_sf + 1)
 
 
-fig, ax = plt.subplots(figsize=(6,4), nrows=1)
+fig, ax = plt.subplots(figsize=(4.5,2.5), nrows=1)
 axs = [ax]
 for ax in axs:
     ax.set_xlim(0,16)
@@ -125,7 +134,8 @@ for _ax in axs:
     _ax.tick_params(axis='x', bottom=False, labelbottom=False)
 
 
-ax.set_ylabel(r'$\delta^{13}$C $[\perthousand]$ when $\delta^{13}$C$_{x_{4}, \mathregular{CO2}}$ is 60 $\perthousand$')
+ax.set_ylabel(r'$\delta^{13}$C [$\perthousand$]')
+plt.tight_layout()
 # axs[1].set_ylabel(r'$\Delta\delta^{13}$C$_{x4, CO2/CH4}$ = $\delta^{13}$C$_{x4, CO2}$ - $\delta^{13}$C$_{x4, CH4}$ $[\perthousand]$')
 plt.savefig(str(dC_CO2_space)+'a_.png', dpi=800)
 plt.savefig(str(dC_CO2_space)+'a_.pdf')
